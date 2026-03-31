@@ -27,6 +27,7 @@ import type {
   InternalLink,
   SiteSettings,
   AuditLogEntry,
+  OfficeLocation,
 } from "@/types";
 
 // === COLLECTIONS ===
@@ -37,6 +38,7 @@ const USERS = "users";
 const LINKS = "internal_links";
 const SETTINGS = "site_settings";
 const AUDIT = "audit_log";
+const OFFICE_LOCATIONS = "office_locations";
 
 // === HELPERS ===
 function cleanUndefined(obj: Record<string, unknown>): Record<string, unknown> {
@@ -221,7 +223,41 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
 }
 
 export async function updateSiteSettings(data: Partial<SiteSettings>): Promise<void> {
-  await updateDoc(doc(db, SETTINGS, "main"), cleanUndefined(data as unknown as Record<string, unknown>));
+  const docRef = doc(db, SETTINGS, "main");
+  const snap = await getDoc(docRef);
+  if (!snap.exists()) {
+    const { setDoc } = await import("firebase/firestore");
+    await setDoc(docRef, { ...cleanUndefined(data as unknown as Record<string, unknown>), createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+  } else {
+    await updateDoc(docRef, { ...cleanUndefined(data as unknown as Record<string, unknown>), updatedAt: serverTimestamp() });
+  }
+}
+
+// === OFFICE LOCATIONS ===
+export async function getOfficeLocations(): Promise<OfficeLocation[]> {
+  const q = query(collection(db, OFFICE_LOCATIONS), orderBy("order", "asc"));
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() } as OfficeLocation));
+}
+
+export async function createOfficeLocation(data: Omit<OfficeLocation, "id" | "createdAt" | "updatedAt">): Promise<string> {
+  const docRef = await addDoc(collection(db, OFFICE_LOCATIONS), {
+    ...cleanUndefined(data as unknown as Record<string, unknown>),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+  return docRef.id;
+}
+
+export async function updateOfficeLocation(id: string, data: Partial<OfficeLocation>): Promise<void> {
+  await updateDoc(doc(db, OFFICE_LOCATIONS, id), {
+    ...cleanUndefined(data as unknown as Record<string, unknown>),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function deleteOfficeLocation(id: string): Promise<void> {
+  await deleteDoc(doc(db, OFFICE_LOCATIONS, id));
 }
 
 // === AUDIT LOG ===

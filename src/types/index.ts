@@ -265,6 +265,23 @@ export interface AuditLogEntry {
   createdAt: string;
 }
 
+// === OFFICE LOCATION ===
+export interface OfficeLocation {
+  id: string;
+  name: string;
+  address: string;
+  city: string;
+  phone: string;
+  email: string;
+  googleMapsEmbedUrl: string;
+  googleMapsLink: string;
+  order: number;
+  isActive: boolean;
+  openingHours: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // === SITE SETTINGS ===
 export interface SiteSettings {
   firmName: string;
@@ -283,6 +300,8 @@ export interface SiteSettings {
   googleMapsEmbed?: string;
   metaTitleSuffix: string;
   defaultOgImage?: string;
+  logoUrl?: string;
+  updatedAt?: string;
 }
 
 // === DASHBOARD STATS ===
