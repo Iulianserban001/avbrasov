@@ -1,7 +1,7 @@
 import { collection, query, getDocs, doc, getDoc, orderBy, limit, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import HomeClient from "./components/home/HomeClient";
-import type { SiteSettings, LegalService, OfficeLocation, BlogPost } from "@/types";
+import type { SiteSettings, LegalService, OfficeLocation, BlogPost, UserProfile } from "@/types";
 import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
@@ -44,6 +44,18 @@ async function getLatestPosts(): Promise<BlogPost[]> {
   }
 }
 
+async function getAttorneys(): Promise<UserProfile[]> {
+  try {
+    const snap = await getDocs(query(collection(db as any, "users"), where("isActive", "==", true)));
+    // Sort logic or role filtering if needed - for now just return active users with a valid role for display
+    const users = snap.docs.map(d => ({ id: d.id, ...d.data() } as UserProfile));
+    return users.filter(u => ['OWNER', 'LEGAL_REVIEWER', 'ADMIN'].includes(u.role));
+  } catch (err) {
+    console.warn("Attorneys fetch failed:", err);
+    return [];
+  }
+}
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
   
@@ -61,11 +73,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   // Parallel fetch for maximum performance
-  const [settings, services, locations, latestPosts] = await Promise.all([
+  const [settings, services, locations, latestPosts, attorneys] = await Promise.all([
     getSettings(),
     getServices(),
     getLocations(),
-    getLatestPosts()
+    getLatestPosts(),
+    getAttorneys()
   ]);
 
   return (
@@ -74,6 +87,7 @@ export default async function HomePage() {
       services={services}
       locations={locations}
       latestPosts={latestPosts}
+      attorneys={attorneys}
     />
   );
 }
