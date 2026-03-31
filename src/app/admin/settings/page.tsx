@@ -6,7 +6,7 @@ import {
   Save, Upload, Image as ImageIcon, Shield, Globe, 
   Mail, Phone, MapPin, Facebook, Linkedin, Instagram,
   CheckCircle2, AlertCircle, Loader2, Trash2, Palette,
-  Type, Share2
+  Type, Share2, Zap, Target
 } from "lucide-react";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
