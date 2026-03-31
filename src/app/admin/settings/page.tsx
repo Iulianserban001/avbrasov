@@ -40,7 +40,7 @@ export default function SettingsPage() {
         } else {
           // Default initial settings
           const initial: SiteSettings = {
-            firmName: "Cabinet de Avocatură Brașov",
+            firmName: "SPS și Asociații",
             firmPhone: "",
             firmEmail: "",
             firmAddress: "",
@@ -49,8 +49,12 @@ export default function SettingsPage() {
             firmZipCode: "",
             firmLatitude: 45.6427,
             firmLongitude: 25.5887,
-            firmDescription: "",
-            metaTitleSuffix: "| Avocat Brașov",
+            firmDescription: "SPS și Asociații — Excelență în avocatură și consultanță juridică în Brașov.",
+            metaTitleSuffix: "| SPS și Asociații",
+            homeH1: "Justiție cu Prestigiu.",
+            homeSubtitle: "Apărăm drepturile și interesele clienților noștri cu o rigoare academică și o strategie juridică de neegalat în județul Brașov.",
+            ctaPrimary: "Programează Consultanță",
+            ctaSecondary: "Vezi Expertiza Noastră"
           };
           setSettings(initial);
         }

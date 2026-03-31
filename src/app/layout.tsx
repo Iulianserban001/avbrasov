@@ -10,15 +10,15 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Avocat Brașov — Cabinet de Avocatură | Consultanță Juridică",
-    template: "%s | Avocat Brașov",
+    default: "SPS și Asociații — Excelență în Avocatură Brașov",
+    template: "%s | SPS și Asociații",
   },
-  description: "Cabinet de avocatură în Brașov. Avocat specializat în divorțuri, succesiuni, drept penal, executare silită. Consultanță juridică profesională.",
+  description: "SPS și Asociații — Cabinet de avocatură de prestigiu în Brașov. Consultanță juridică strategică și apărare de neclintit în drept civil, penal și corporate.",
   metadataBase: new URL("https://avocatbrasov.ro"),
   openGraph: {
     type: "website",
     locale: "ro_RO",
-    siteName: "Cabinet Avocat Brașov",
+    siteName: "SPS și Asociații",
   },
   robots: {
     index: true,

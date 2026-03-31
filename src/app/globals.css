@@ -192,3 +192,68 @@ body {
   stroke-linecap: round;
   transition: stroke-dashoffset 1s ease-in-out;
 }
+/* === ELITE PORTAL COMPONENTS === */
+.container-custom {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.btn-elite {
+  background: black;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  padding: 1rem 2rem;
+  border-radius: 2px;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-elite:hover {
+  background: white;
+  color: black;
+  border-color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px -10px rgba(255, 255, 255, 0.1);
+}
+
+.btn-elite-wide {
+  background: black;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  padding: 1rem 4rem;
+  border-radius: 2px;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.italic-gold {
+  color: var(--gold-500);
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Typography Overrides for Reading */
+.prose-serif {
+  font-family: 'Cormorant Garamond', serif;
+}

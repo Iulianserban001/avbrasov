@@ -302,7 +302,40 @@ export interface SiteSettings {
   defaultOgImage?: string;
   logoUrl?: string;
   heroImageUrl?: string;
+  
+  // Home Page & SEO Content
+  homeH1?: string;
+  homeSubtitle?: string;
+  homeMetaDescription?: string;
+  homeKeywords?: string;
+  ctaPrimary?: string;
+  ctaSecondary?: string;
+
   updatedAt?: string;
+}
+
+// === BLOG POST ===
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  author: string;
+  content: string;
+  excerpt: string;
+  featuredImage?: string;
+  
+  // SEO Specifics
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string;
+  
+  status: "DRAFT" | "PUBLISHED";
+  category?: string;
+  tags?: string[];
+  
+  publishedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // === DASHBOARD STATS ===

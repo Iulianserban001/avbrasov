@@ -25,6 +25,7 @@ import { useState } from "react";
 const navItems = [
   { href: "/admin", label: "Centru Comandă", icon: LayoutDashboard, exact: true },
   { href: "/admin/pages", label: "Pagini", icon: FileText },
+  { href: "/admin/posts", label: "Blog & Articole", icon: FileText },
   { href: "/admin/services", label: "Servicii", icon: Scale },
   { href: "/admin/localities", label: "Localități", icon: MapPin },
   { href: "/admin/attorneys", label: "Avocați", icon: Users },
@@ -94,8 +95,8 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 <Scale className="w-5 h-5 text-[var(--gold-500)]" />
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-sm tracking-[0.1em] text-[var(--stone-100)] uppercase">AVOCAT</span>
-                <span className="text-[10px] font-semibold text-[var(--gold-500)] -mt-1 tracking-widest uppercase">BRAȘOV</span>
+                <span className="font-bold text-sm tracking-[0.1em] text-[var(--stone-100)] uppercase leading-none">SPS</span>
+                <span className="text-[9px] font-semibold text-[var(--gold-500)] tracking-widest uppercase">ȘI ASOCIAȚII</span>
               </div>
             </Link>
           )}
