@@ -1,299 +1,407 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Settings, Save, Upload, Trash2, Globe, Building2, 
-  Smartphone, Mail, MapPin, Shield, Info, Image as ImageIcon,
-  CheckCircle2, AlertCircle
+  Save, Upload, Image as ImageIcon, Shield, Globe, 
+  Mail, Phone, MapPin, Facebook, Linkedin, Instagram,
+  CheckCircle2, AlertCircle, Loader2, Trash2, Palette,
+  Type, Share2
 } from "lucide-react";
-import { getSiteSettings, updateSiteSettings } from "@/lib/firestore";
-import { uploadFile } from "@/lib/storage";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { uploadBrandingAsset } from "@/lib/storage";
 import type { SiteSettings } from "@/types";
 
+const TABS = [
+  { id: "branding", label: "Branding", icon: Palette },
+  { id: "contact", label: "Contact", icon: Mail },
+  { id: "social", label: "Social & SEO", icon: Globe },
+];
+
 export default function SettingsPage() {
+  const [activeTab, setActiveTab] = useState("branding");
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  const [settings, setSettings] = useState<SiteSettings>({
-    firmName: "Avocat Brașov",
-    firmPhone: "",
-    firmEmail: "",
-    firmAddress: "",
-    firmCity: "Brașov",
-    firmCounty: "Brașov",
-    firmZipCode: "",
-    firmLatitude: 45.6427,
-    firmLongitude: 25.5887,
-    firmDescription: "",
-    metaTitleSuffix: "| Avocat Brașov",
-    logoUrl: "",
-  });
+  const [status, setStatus] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+
+  // File Upload Refs
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const heroInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    async function loadSettings() {
+    async function fetchSettings() {
       try {
-        const data = await getSiteSettings();
-        if (data) {
-          setSettings(prev => ({ ...prev, ...data }));
+        const docRef = doc(db, "settings", "global");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setSettings(docSnap.data() as SiteSettings);
+        } else {
+          // Default initial settings
+          const initial: SiteSettings = {
+            firmName: "Cabinet de Avocatură Brașov",
+            firmPhone: "",
+            firmEmail: "",
+            firmAddress: "",
+            firmCity: "Brașov",
+            firmCounty: "Brașov",
+            firmZipCode: "",
+            firmLatitude: 45.6427,
+            firmLongitude: 25.5887,
+            firmDescription: "",
+            metaTitleSuffix: "| Avocat Brașov",
+          };
+          setSettings(initial);
         }
       } catch (err) {
-        console.error("Error loading settings:", err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     }
-    loadSettings();
+    fetchSettings();
   }, []);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
-    setSuccess(false);
+  const handleUpdate = (field: keyof SiteSettings, value: any) => {
+    if (!settings) return;
+    setSettings({ ...settings, [field]: value });
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: "logo" | "hero") => {
+    const file = e.target.files?.[0];
+    if (!file || !settings) return;
+
     try {
-      await updateSiteSettings(settings);
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
+      setSaving(true);
+      const path = `branding/${type}_${Date.now()}_${file.name}`;
+      const url = await uploadBrandingAsset(file, path);
+      
+      if (type === "logo") handleUpdate("logoUrl", url);
+      else handleUpdate("heroImageUrl", url);
+      
+      setStatus({ type: "success", msg: `${type === 'logo' ? 'Logoul' : 'Imaginea Hero'} a fost încărcată temporar. Salvează pentru a aplica.` });
     } catch (err) {
-      console.error("Error updating settings:", err);
-      alert("Eroare la salvarea setărilor.");
+      console.error(err);
+      setStatus({ type: "error", msg: "Eroare la încărcare." });
     } finally {
       setSaving(false);
     }
   };
 
-  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setSaving(true);
+  const saveSettings = async () => {
+    if (!settings) return;
     try {
-      const url = await uploadFile(file, `branding/logo_${Date.now()}_${file.name}`);
-      setSettings(prev => ({ ...prev, logoUrl: url }));
+      setSaving(true);
+      const docRef = doc(db, "settings", "global");
+      await setDoc(docRef, { ...settings, updatedAt: new Date().toISOString() });
+      setStatus({ type: "success", msg: "Setările au fost salvate cu succes!" });
+      setTimeout(() => setStatus(null), 3000);
     } catch (err) {
-      console.error("Error uploading logo:", err);
-      alert("Eroare la încărcarea logo-ului.");
+      console.error(err);
+      setStatus({ type: "error", msg: "Eroare la salvarea setărilor." });
     } finally {
       setSaving(false);
     }
   };
 
   if (loading) {
-    return (
-      <div className="space-y-8 animate-fade-in">
-        <div className="h-10 w-64 bg-[var(--stone-900)] rounded-xl"></div>
-        <div className="premium-card h-96 border-dashed"></div>
-      </div>
-    );
+     return (
+       <div className="flex items-center justify-center h-[60vh]">
+         <div className="flex flex-col items-center gap-4">
+           <Loader2 className="w-8 h-8 text-[var(--gold-500)] animate-spin" />
+           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--gold-500)]">Se încarcă configurația</p>
+         </div>
+       </div>
+     );
   }
 
   return (
-    <div className="space-y-8 animate-fade-in pb-12">
+    <div className="space-y-10 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-[var(--stone-100)] uppercase tracking-tight flex items-center gap-3">
-             <div className="w-10 h-10 rounded-xl bg-[var(--stone-900)] border border-[var(--premium-border)] flex items-center justify-center">
-              <Settings className="w-5 h-5 text-[var(--gold-500)]" />
-            </div>
-            Setări Globale
-          </h1>
-          <p className="text-xs text-[var(--stone-500)] font-bold uppercase tracking-widest mt-2 ml-1">
-            Configurarea brandului și informațiilor fundamentale ale firmei
-          </p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-black text-[var(--stone-100)] tracking-tighter uppercase italic">Setări Platformă</h1>
+          <p className="text-xs font-bold text-[var(--stone-500)] uppercase tracking-[0.25em]">Configurare Branding & Infrastructură Digitală.</p>
         </div>
-        
-        <div className="flex items-center gap-4">
-          {success && (
-            <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase tracking-widest bg-emerald-500/10 px-3 py-2 rounded-lg border border-emerald-500/20">
-              <CheckCircle2 className="w-4 h-4" /> Salvat cu succes
-            </div>
-          )}
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex items-center gap-2 px-8 py-3 rounded-xl bg-[var(--gold-500)] text-[var(--stone-950)] font-bold text-sm hover:bg-[var(--gold-400)] transition-all shadow-xl shadow-[var(--gold-500)]/10 disabled:opacity-50"
-          >
-            {saving ? <div className="w-4 h-4 border-2 border-[var(--stone-950)] border-t-transparent rounded-full animate-spin" /> : <Save className="w-4 h-4" />}
-            Salvează Modificările
-          </button>
-        </div>
+        <button 
+          onClick={saveSettings}
+          disabled={saving}
+          className="btn-primary flex items-center gap-2 px-8 min-w-[200px] justify-center disabled:opacity-50"
+        >
+          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          {saving ? "Se salvează..." : "Salvează Modificări"}
+        </button>
       </div>
 
-      <form onSubmit={handleSave} className="grid lg:grid-cols-3 gap-8">
-        {/* Left Column: Branding */}
-        <div className="lg:col-span-1 space-y-6">
-          <div className="premium-card p-6 space-y-6">
-            <h3 className="text-xs font-bold text-[var(--gold-500)] uppercase tracking-widest flex items-center gap-2">
-              <Shield className="w-3.5 h-3.5" /> Identitate Vizuală
-            </h3>
+      {/* Tabs */}
+      <div className="flex gap-2 p-1 bg-[var(--stone-900)] border border-[var(--premium-border)] rounded-2xl w-fit">
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all
+              ${activeTab === tab.id ? "bg-[var(--gold-500)] text-[var(--stone-950)] shadow-lg" : "text-[var(--stone-500)] hover:text-[var(--stone-100)]"}
+            `}
+          >
+            <tab.icon className="w-4 h-4" />
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
-            <div className="space-y-4">
-              <label className="block text-[10px] font-bold text-[var(--stone-500)] uppercase tracking-widest ml-1">Logo-ul Firmei</label>
-              <div className="relative aspect-video w-full rounded-2xl bg-[var(--stone-950)] border border-[var(--premium-border)] flex flex-col items-center justify-center overflow-hidden group">
-                {settings.logoUrl ? (
-                  <>
-                    <img src={settings.logoUrl} alt="Logo" className="w-full h-full object-contain p-4 transition-transform group-hover:scale-105" />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                      <button 
-                        type="button" 
-                        onClick={() => fileInputRef.current?.click()}
-                        className="p-2 rounded-full bg-[var(--gold-500)] text-[var(--stone-950)] hover:scale-110 transition-transform"
-                      >
-                         <Upload className="w-4 h-4" />
-                      </button>
-                      <button 
-                        type="button" 
-                        onClick={() => setSettings({ ...settings, logoUrl: "" })}
-                        className="p-2 rounded-full bg-red-500 text-white hover:scale-110 transition-transform"
-                      >
-                         <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                    <ImageIcon className="w-10 h-10 text-[var(--stone-800)] mx-auto mb-2" />
-                    <p className="text-[10px] text-[var(--stone-600)] font-bold uppercase tracking-wider">Click pentru upload</p>
-                  </div>
-                )}
-                <input type="file" ref={fileInputRef} onChange={handleLogoUpload} accept="image/*" className="hidden" />
-              </div>
-            </div>
+      {/* Status Alert */}
+      <AnimatePresence>
+        {status && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className={`p-4 rounded-xl border flex items-center gap-3 ${
+              status.type === "success" ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" : "bg-red-500/10 border-red-500/20 text-red-400"
+            }`}
+          >
+            {status.type === "success" ? <CheckCircle2 className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+            <span className="text-sm font-bold">{status.msg}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            <div>
-              <label className="block text-[10px] font-bold text-[var(--stone-500)] uppercase tracking-widest mb-1.5 ml-1">Nume Firmă</label>
-              <input
-                type="text"
-                value={settings.firmName}
-                onChange={(e) => setSettings({ ...settings, firmName: e.target.value })}
-                className="w-full bg-[var(--stone-950)] border border-[var(--premium-border)] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[var(--gold-500)] transition-colors"
-                placeholder="Avocat Brașov - Legal SEO"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[10px] font-bold text-[var(--stone-500)] uppercase tracking-widest mb-1.5 ml-1">Suffix Meta Title</label>
-              <input
-                type="text"
-                value={settings.metaTitleSuffix}
-                onChange={(e) => setSettings({ ...settings, metaTitleSuffix: e.target.value })}
-                className="w-full bg-[var(--stone-950)] border border-[var(--premium-border)] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[var(--gold-500)] transition-colors"
-                placeholder="| Avocat Brașov"
-              />
-              <p className="text-[10px] text-[var(--stone-600)] mt-1.5 italic">Se va adăuga la sfârșitul fiecărui titlu de pagină.</p>
-            </div>
-          </div>
-
-          <div className="premium-card p-6 bg-gradient-to-br from-[var(--gold-500)]/5 to-transparent">
-             <div className="flex items-start gap-4">
-                <Info className="w-5 h-5 text-[var(--gold-500)] shrink-0" />
-                <div>
-                   <h4 className="text-xs font-bold text-[var(--stone-100)] uppercase tracking-tight mb-1">Informație Live</h4>
-                   <p className="text-[10px] text-[var(--stone-500)] leading-relaxed font-medium">
-                      Modificările efectuate aici se vor reflecta instantaneu pe site-ul public în antet (Header) și subsol (Footer).
-                   </p>
+      {/* Content Area */}
+      <div className="grid lg:grid-cols-3 gap-10">
+        <div className="lg:col-span-2 space-y-8">
+          
+          <AnimatePresence mode="wait">
+            {activeTab === "branding" && (
+              <motion.div
+                key="branding"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="space-y-8"
+              >
+                {/* Branding Form */}
+                <div className="premium-card p-8 space-y-6">
+                   <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Nume Cabinet</label>
+                        <input 
+                          type="text" 
+                          value={settings?.firmName} 
+                          onChange={(e) => handleUpdate("firmName", e.target.value)}
+                          className="input-pro"
+                          placeholder="Cabinet de Avocatură..."
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Meta Title Suffix</label>
+                        <input 
+                          type="text" 
+                          value={settings?.metaTitleSuffix} 
+                          onChange={(e) => handleUpdate("metaTitleSuffix", e.target.value)}
+                          className="input-pro"
+                          placeholder="| Avocat Brașov"
+                        />
+                      </div>
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Descriere Firmă (Footer/About)</label>
+                      <textarea 
+                        rows={4}
+                        value={settings?.firmDescription} 
+                        onChange={(e) => handleUpdate("firmDescription", e.target.value)}
+                        className="input-pro resize-none"
+                        placeholder="Expertiză juridică de top în Brașov..."
+                      />
+                   </div>
                 </div>
-             </div>
-          </div>
+
+                {/* LOGO & HERO SECTION */}
+                <div className="grid md:grid-cols-2 gap-8">
+                   <div className="premium-card p-8 space-y-4">
+                      <div className="flex items-center justify-between mb-2">
+                         <h3 className="text-xs font-black uppercase tracking-widest text-[var(--stone-100)] flex items-center gap-2">
+                           <Type className="w-4 h-4 text-[var(--gold-500)]" /> Logo Site
+                         </h3>
+                         <button 
+                           onClick={() => logoInputRef.current?.click()}
+                           className="text-[10px] font-black uppercase tracking-widest text-[var(--gold-500)] hover:text-[var(--stone-100)] transition-colors"
+                         >
+                           Schimbă Imaginea
+                         </button>
+                      </div>
+                      <div className="aspect-video rounded-xl bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden relative group">
+                         {settings?.logoUrl ? (
+                           <img src={settings.logoUrl} className="max-h-[80%] max-w-[80%] object-contain" alt="Logo" />
+                         ) : (
+                           <div className="flex flex-col items-center gap-2 text-[var(--stone-700)]">
+                             <ImageIcon className="w-8 h-8" />
+                             <span className="text-[9px] font-bold uppercase tracking-widest">Niciun Logo</span>
+                           </div>
+                         )}
+                         <input ref={logoInputRef} type="file" hidden accept="image/*" onChange={(e) => handleFileUpload(e, "logo")} />
+                      </div>
+                   </div>
+
+                   <div className="premium-card p-8 space-y-4">
+                      <div className="flex items-center justify-between mb-2">
+                         <h3 className="text-xs font-black uppercase tracking-widest text-[var(--stone-100)] flex items-center gap-2">
+                           <ImageIcon className="w-4 h-4 text-[var(--gold-500)]" /> Imagine Hero
+                         </h3>
+                         <button 
+                           onClick={() => heroInputRef.current?.click()}
+                           className="text-[10px] font-black uppercase tracking-widest text-[var(--gold-500)] hover:text-[var(--stone-100)] transition-colors"
+                         >
+                           Încarcă Nouă
+                         </button>
+                      </div>
+                      <div className="aspect-video rounded-xl bg-black/40 border border-white/5 flex items-center justify-center overflow-hidden relative group">
+                         {settings?.heroImageUrl ? (
+                           <img src={settings.heroImageUrl} className="w-full h-full object-cover" alt="Hero" />
+                         ) : (
+                           <div className="flex flex-col items-center gap-2 text-[var(--stone-700)]">
+                             <ImageIcon className="w-8 h-8" />
+                             <span className="text-[9px] font-bold uppercase tracking-widest">Implicită</span>
+                           </div>
+                         )}
+                         <input ref={heroInputRef} type="file" hidden accept="image/*" onChange={(e) => handleFileUpload(e, "hero")} />
+                      </div>
+                   </div>
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === "contact" && (
+              <motion.div
+                key="contact"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="premium-card p-8 space-y-6"
+              >
+                <div className="grid md:grid-cols-2 gap-6">
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2">
+                        <Phone className="w-3 h-3" /> Telefon Principal
+                      </label>
+                      <input 
+                        type="text" 
+                        value={settings?.firmPhone} 
+                        onChange={(e) => handleUpdate("firmPhone", e.target.value)}
+                        className="input-pro"
+                      />
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2">
+                        <Mail className="w-3 h-3" /> Email Contact
+                      </label>
+                      <input 
+                        type="email" 
+                        value={settings?.firmEmail} 
+                        onChange={(e) => handleUpdate("firmEmail", e.target.value)}
+                        className="input-pro"
+                      />
+                   </div>
+                </div>
+                <div className="space-y-2">
+                   <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2">
+                     <MapPin className="w-3 h-3" /> Adresă Sediu Central
+                   </label>
+                   <input 
+                     type="text" 
+                     value={settings?.firmAddress} 
+                     onChange={(e) => handleUpdate("firmAddress", e.target.value)}
+                     className="input-pro"
+                     placeholder="Strada, Număr..."
+                   />
+                </div>
+                <div className="grid md:grid-cols-3 gap-6">
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Oraș</label>
+                      <input type="text" value={settings?.firmCity} onChange={(e) => handleUpdate("firmCity", e.target.value)} className="input-pro" />
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Județ</label>
+                      <input type="text" value={settings?.firmCounty} onChange={(e) => handleUpdate("firmCounty", e.target.value)} className="input-pro" />
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Cod Poștal</label>
+                      <input type="text" value={settings?.firmZipCode} onChange={(e) => handleUpdate("firmZipCode", e.target.value)} className="input-pro" />
+                   </div>
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === "social" && (
+              <motion.div
+                key="social"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="premium-card p-8 space-y-6"
+              >
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2">
+                      <Facebook className="w-3 h-3" /> Facebook URL
+                    </label>
+                    <input type="text" value={settings?.socialFacebook} onChange={(e) => handleUpdate("socialFacebook", e.target.value)} className="input-pro" />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2">
+                      <Linkedin className="w-3 h-3" /> LinkedIn URL
+                    </label>
+                    <input type="text" value={settings?.socialLinkedIn} onChange={(e) => handleUpdate("socialLinkedIn", e.target.value)} className="input-pro" />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2">
+                      <Instagram className="w-3 h-3" /> Instagram URL
+                    </label>
+                    <input type="text" value={settings?.socialInstagram} onChange={(e) => handleUpdate("socialInstagram", e.target.value)} className="input-pro" />
+                 </div>
+                 <div className="pt-4 border-t border-[var(--premium-border)]">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2 mb-2">
+                      <Shield className="w-3 h-3" /> Google Maps Embed URL
+                    </label>
+                    <textarea value={settings?.googleMapsEmbed} onChange={(e) => handleUpdate("googleMapsEmbed", e.target.value)} className="input-pro h-24" placeholder="<iframe... />" />
+                 </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Center & Right column: Details */}
-        <div className="lg:col-span-2 space-y-6">
-           <div className="premium-card p-8">
-              <h3 className="text-xs font-bold text-[var(--gold-500)] uppercase tracking-widest flex items-center gap-2 mb-8">
-                <Building2 className="w-3.5 h-3.5" /> Informații de Contact (Global Default)
+        {/* Sidebar Info */}
+        <div className="space-y-6">
+           <div className="premium-card p-6 bg-gradient-to-br from-[var(--stone-900)] to-black border-l-4 border-l-[var(--gold-500)]">
+              <div className="flex items-center gap-3 mb-4">
+                 <Zap className="w-5 h-5 text-[var(--gold-500)]" />
+                 <h3 className="text-xs font-black uppercase tracking-widest text-[var(--stone-100)]">Infrastructură Live</h3>
+              </div>
+              <p className="text-xs text-[var(--stone-500)] leading-relaxed italic">
+                 "Brandingul dinamic permite cabinetului să reacționeze rapid la campanii sezoniere sau schimbări de identitate, fără intervenția echipei de development."
+              </p>
+           </div>
+
+           <div className="premium-card p-6 space-y-4">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-100)] flex items-center gap-2">
+                 <Target className="w-4 h-4 text-[var(--emerald-500)]" /> Status Optimizare
               </h3>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                 <div className="space-y-6">
-                    <div>
-                      <label className="block text-[10px] font-bold text-[var(--stone-500)] uppercase tracking-widest mb-1.5 ml-1">Adresă Principală (Sediul Head)</label>
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--stone-600)]" />
-                        <input
-                          type="text"
-                          value={settings.firmAddress}
-                          onChange={(e) => setSettings({ ...settings, firmAddress: e.target.value })}
-                          className="w-full bg-[var(--stone-950)] border border-[var(--premium-border)] rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-[var(--gold-500)] transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-[10px] font-bold text-[var(--stone-500)] uppercase tracking-widest mb-1.5 ml-1">Oraș</label>
-                        <input
-                          type="text"
-                          value={settings.firmCity}
-                          onChange={(e) => setSettings({ ...settings, firmCity: e.target.value })}
-                          className="w-full bg-[var(--stone-950)] border border-[var(--premium-border)] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[var(--gold-500)] transition-colors"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-[var(--stone-500)] uppercase tracking-widest mb-1.5 ml-1">Județ</label>
-                        <input
-                          type="text"
-                          value={settings.firmCounty}
-                          onChange={(e) => setSettings({ ...settings, firmCounty: e.target.value })}
-                          className="w-full bg-[var(--stone-950)] border border-[var(--premium-border)] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[var(--gold-500)] transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] font-bold text-[var(--stone-500)] uppercase tracking-widest mb-1.5 ml-1">Descriere Firmă (Footer Brief)</label>
-                      <textarea
-                        rows={4}
-                        value={settings.firmDescription}
-                        onChange={(e) => setSettings({ ...settings, firmDescription: e.target.value })}
-                        className="w-full bg-[var(--stone-950)] border border-[var(--premium-border)] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[var(--gold-500)] transition-colors resize-none"
-                        placeholder="O scurtă descriere a misiunii firmei..."
-                      />
-                    </div>
+              <div className="space-y-3">
+                 <div className="flex justify-between items-center text-[10px] font-bold">
+                    <span className="text-[var(--stone-500)] uppercase">Branding</span>
+                    <span className="text-emerald-400">ACTIV</span>
                  </div>
-
-                 <div className="space-y-6">
-                    <div>
-                      <label className="block text-[10px] font-bold text-[var(--stone-500)] uppercase tracking-widest mb-1.5 ml-1">Telefon Principal</label>
-                      <div className="relative">
-                        <Smartphone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--stone-600)]" />
-                        <input
-                          type="text"
-                          value={settings.firmPhone}
-                          onChange={(e) => setSettings({ ...settings, firmPhone: e.target.value })}
-                          className="w-full bg-[var(--stone-950)] border border-[var(--premium-border)] rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-[var(--gold-500)] transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] font-bold text-[var(--stone-500)] uppercase tracking-widest mb-1.5 ml-1">Email Principal</label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--stone-600)]" />
-                        <input
-                          type="email"
-                          value={settings.firmEmail}
-                          onChange={(e) => setSettings({ ...settings, firmEmail: e.target.value })}
-                          className="w-full bg-[var(--stone-950)] border border-[var(--premium-border)] rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-[var(--gold-500)] transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="pt-4 space-y-4">
-                      <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 flex items-start gap-4">
-                         <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
-                         <p className="text-[10px] text-[var(--stone-400)] leading-relaxed italic">
-                           Aceste date vor fi folosite implicit pe paginile unde nu sunt specificate date de contact dedicate. Pentru locații multiple, folosiți modulul <span className="text-amber-500 font-bold uppercase tracking-widest text-[9px]">SEDII</span>.
-                         </p>
-                      </div>
-                    </div>
+                 <div className="flex justify-between items-center text-[10px] font-bold">
+                    <span className="text-[var(--stone-500)] uppercase">Contact</span>
+                    <span className={settings?.firmPhone ? "text-emerald-400" : "text-amber-400"}>{settings?.firmPhone ? "COMPLET" : "INCOMPLET"}</span>
+                 </div>
+                 <div className="flex justify-between items-center text-[10px] font-bold">
+                    <span className="text-[var(--stone-500)] uppercase">SEO Suffix</span>
+                    <span className="text-emerald-400">VALID</span>
                  </div>
               </div>
            </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

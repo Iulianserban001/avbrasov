@@ -301,6 +301,7 @@ export interface SiteSettings {
   metaTitleSuffix: string;
   defaultOgImage?: string;
   logoUrl?: string;
+  heroImageUrl?: string;
   updatedAt?: string;
 }
 
