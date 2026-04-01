@@ -31,78 +31,71 @@ export default function Header({ settings }: HeaderProps) {
   return (
     <header className="fixed top-0 inset-x-0 z-[60] w-full">
       <nav
-        className={`w-full transition-all duration-500 ${
+        className={`w-full transition-all duration-700 ${
           isScrolled
-            ? "bg-black/95 backdrop-blur-xl border-b border-white/10 py-3"
-            : "bg-transparent py-6"
+            ? "bg-black/95 backdrop-blur-2xl border-b border-white/5 py-3 shadow-2xl shadow-black/50"
+            : "bg-transparent py-10"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center justify-center gap-4 relative">
+        <div className="max-w-[1600px] mx-auto px-10 flex flex-col items-center justify-center gap-8 relative">
 
-          {/* === LOGO (Centered) === */}
-          <Link href="/" className="flex flex-col items-center justify-center">
-            {settings?.logoUrl ? (
-              <img
-                src={settings.logoUrl}
-                alt={settings.firmName || "SPS și Asociații"}
-                className={`w-auto object-contain transition-all duration-500 mx-auto ${isScrolled ? "h-8" : "h-12"}`}
-              />
-            ) : (
-              <div className="flex flex-col items-center text-center">
-                <span
-                  className={`font-black tracking-tighter uppercase text-white italic leading-none transition-all duration-500 ${
-                    isScrolled ? "text-3xl" : "text-4xl md:text-5xl"
-                  }`}
-                >
-                  SPS
-                </span>
-                <span
-                  className={`font-black uppercase text-[var(--gold-500)] tracking-[0.4em] text-[9px] transition-all duration-500 ${
-                    isScrolled ? "opacity-0 max-h-0 overflow-hidden" : "opacity-100 max-h-8 mt-1"
-                  }`}
-                >
-                  ȘI ASOCIAȚII
-                </span>
-              </div>
-            )}
+          {/* === LOGO (Perfectly Centered) === */}
+          <Link href="/" className="flex flex-col items-center justify-center group">
+            <div className="flex flex-col items-center text-center">
+              <span
+                className={`font-black tracking-tighter uppercase text-white italic leading-[0.7] transition-all duration-700 group-hover:text-[var(--gold-400)] ${
+                  isScrolled ? "text-4xl" : "text-6xl md:text-7xl"
+                }`}
+              >
+                SPS
+              </span>
+              <span
+                className={`font-black uppercase text-[var(--gold-500)] tracking-[0.8em] transition-all duration-700 ${
+                  isScrolled ? "opacity-0 max-h-0 overflow-hidden" : "opacity-100 max-h-12 mt-3 text-[11px]"
+                }`}
+              >
+                ȘI ASOCIAȚII
+              </span>
+            </div>
           </Link>
 
           {/* === DESKTOP NAV (Centered below logo) === */}
-          <div className="hidden lg:flex items-center justify-center gap-10 xl:gap-16">
+          <div className={`hidden lg:flex items-center justify-center gap-16 transition-all duration-700 ${isScrolled ? "mt-0" : "mt-4"}`}>
             {menuItems.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="relative text-[10px] font-black uppercase tracking-[0.4em] text-stone-400 hover:text-white transition-colors duration-300 group py-1"
+                className="relative text-[11px] font-black uppercase tracking-[0.6em] text-white/50 hover:text-white transition-all duration-500 group py-2"
               >
                 {item.name}
-                <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-0 h-px bg-[var(--gold-500)] group-hover:w-full transition-all duration-500" />
+                <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-0 h-px bg-[var(--gold-500)] group-hover:w-full transition-all duration-700 shadow-[0_0_8px_var(--gold-500)]" />
               </Link>
             ))}
           </div>
 
           {/* === MOBILE: Hamburger left, Phone right === */}
-          <div className="lg:hidden absolute left-4 top-1/2 -translate-y-1/2">
+          <div className="lg:hidden absolute left-6 top-1/2 -translate-y-1/2">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="text-white p-2 hover:text-[var(--gold-500)] transition-colors"
+              className="text-white p-3 hover:text-[var(--gold-500)] transition-colors bg-white/5 border border-white/5 rounded-sm"
               aria-label="Open Menu"
             >
-              <Menu className="w-6 h-6" />
+              <Menu className="w-7 h-7" />
             </button>
           </div>
-          <div className="lg:hidden absolute right-4 top-1/2 -translate-y-1/2">
+          <div className="lg:hidden absolute right-6 top-1/2 -translate-y-1/2">
             <Link
               href="/contact"
-              className="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-white/5 text-[var(--gold-500)] hover:bg-[var(--gold-500)]/20 transition-all"
+              className="w-12 h-12 flex items-center justify-center rounded-sm border border-white/10 bg-white/5 text-[var(--gold-500)] hover:bg-[var(--gold-500)]/20 transition-all"
               aria-label="Contact"
             >
-              <Phone className="w-4 h-4" />
+              <Phone className="w-5 h-5" />
             </Link>
           </div>
 
         </div>
       </nav>
+
 
       {/* === MOBILE MENU OVERLAY === */}
       <AnimatePresence>
