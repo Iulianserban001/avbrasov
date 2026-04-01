@@ -33,26 +33,26 @@ export default function Header({ settings }: HeaderProps) {
       <nav 
         className={`w-full transition-all duration-700 ${
           isScrolled 
-            ? "bg-black/80 backdrop-blur-xl border-b border-white/5 py-4" 
-            : "bg-transparent py-8"
+            ? "bg-black/90 backdrop-blur-2xl border-b border-white/5 py-4" 
+            : "bg-transparent py-10"
         }`}
       >
-        <div className="max-w-[1920px] mx-auto px-8 md:px-16 flex flex-col items-center gap-6">
+        <div className="max-w-7xl mx-auto px-8 flex flex-col items-center justify-center text-center gap-8 relative w-full">
           
           {/* Logo Centerpiece */}
-          <Link href="/" className="group flex flex-col items-center transition-all duration-700">
+          <Link href="/" className="group flex flex-col items-center text-center transition-all duration-700 w-full justify-center">
             {settings?.logoUrl ? (
               <img 
                 src={settings.logoUrl} 
                 alt={settings.firmName} 
-                className={`w-auto transition-all duration-700 ${isScrolled ? 'h-8' : 'h-14'} object-contain`} 
+                className={`w-auto transition-all duration-700 ${isScrolled ? 'h-10' : 'h-16'} object-contain mx-auto`} 
               />
             ) : (
-              <div className="flex flex-col items-center">
-                <div className={`flex items-center gap-4 transition-all duration-700 ${isScrolled ? 'scale-90' : 'scale-100'}`}>
-                  <span className="text-4xl md:text-5xl font-black tracking-tighter uppercase text-white italic leading-none">SPS</span>
+              <div className="flex flex-col items-center text-center justify-center">
+                <div className={`flex items-center justify-center gap-4 transition-all duration-700 ${isScrolled ? 'scale-90' : 'scale-110'}`}>
+                  <span className="text-5xl md:text-6xl font-black tracking-tighter uppercase text-white italic leading-none block text-center">SPS</span>
                 </div>
-                <span className={`text-[10px] md:text-xs font-black tracking-[0.6em] uppercase text-[var(--gold-500)] mt-2 transition-opacity duration-700 ${isScrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}>
+                <span className={`text-[10px] md:text-sm font-black tracking-[0.8em] uppercase text-[var(--gold-500)] mt-4 transition-opacity duration-700 block text-center ${isScrolled ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}>
                   ȘI ASOCIAȚII
                 </span>
               </div>
@@ -60,29 +60,29 @@ export default function Header({ settings }: HeaderProps) {
           </Link>
 
           {/* Desktop Symmetrical Menu */}
-          <div className={`hidden lg:flex items-center justify-center gap-16 transition-all duration-700 ${isScrolled ? 'opacity-100 mt-0' : 'opacity-100 mt-2'}`}>
+          <div className={`hidden lg:flex items-center justify-center gap-12 xl:gap-20 transition-all duration-700 w-full ${isScrolled ? 'opacity-100 mt-2' : 'opacity-100 mt-6'}`}>
             {menuItems.map((item) => (
               <Link 
                 key={item.name} 
                 href={item.href}
-                className="text-[10px] font-black uppercase tracking-[0.4em] text-stone-400 hover:text-white transition-all relative group"
+                className="text-[11px] font-black uppercase tracking-[0.5em] text-stone-400 hover:text-white transition-all relative group py-2"
               >
                 {item.name}
-                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-px bg-[var(--gold-500)] group-hover:w-full transition-all duration-500" />
+                <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-px bg-[var(--gold-500)] group-hover:w-full transition-all duration-700" />
               </Link>
             ))}
           </div>
 
           {/* Mobile Overlay Toggle & Quick Contact (Floating) */}
-          <div className="lg:hidden absolute left-8 top-1/2 -translate-y-1/2">
-             <button onClick={() => setMobileMenuOpen(true)} className="text-white hover:text-[var(--gold-500)] transition-colors">
-                <Menu className="w-6 h-6" />
+          <div className="lg:hidden absolute left-8 top-1/2 -translate-y-1/2 flex items-center">
+             <button onClick={() => setMobileMenuOpen(true)} className="text-white hover:text-[var(--gold-500)] transition-colors p-2">
+                <Menu className="w-7 h-7" />
              </button>
           </div>
           
-          <div className="lg:hidden absolute right-8 top-1/2 -translate-y-1/2">
-             <Link href="/contact" className="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 bg-white/5 text-[var(--gold-500)]">
-                <Phone className="w-4 h-4" />
+          <div className="lg:hidden absolute right-8 top-1/2 -translate-y-1/2 flex items-center">
+             <Link href="/contact" className="w-12 h-12 flex items-center justify-center rounded-full border border-white/10 bg-white/5 text-[var(--gold-500)] hover:bg-[var(--gold-500)]/10 transition-all">
+                <Phone className="w-5 h-5" />
              </Link>
           </div>
         </div>

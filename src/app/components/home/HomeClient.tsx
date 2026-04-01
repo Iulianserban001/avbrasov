@@ -69,25 +69,25 @@ export default function HomeClient({ settings, services, locations, latestPosts,
            />
          </motion.div>
 
-         <div className="relative z-20 text-center max-w-6xl px-8 w-full flex flex-col items-center">
+         <div className="relative z-20 text-center max-w-7xl mx-auto px-8 w-full flex flex-col items-center justify-center">
             <motion.div 
                style={{ opacity: heroOpacity }}
                initial="hidden" 
                animate="visible" 
                variants={staggerContainer}
-               className="space-y-10 w-full flex flex-col items-center"
+               className="space-y-12 w-full flex flex-col items-center justify-center"
             >
-               <motion.div variants={fadeInUp} className="flex items-center justify-center gap-4 mb-4">
-                  <div className="w-12 h-px bg-[var(--gold-600)]/30" />
-                  <span className="text-[11px] font-black uppercase tracking-[0.6em] text-[var(--gold-500)] italic text-center">
+               <motion.div variants={fadeInUp} className="flex items-center justify-center gap-6 mb-4">
+                  <div className="w-16 h-px bg-[var(--gold-600)]/40" />
+                  <span className="text-[12px] font-black uppercase tracking-[0.8em] text-[var(--gold-500)] italic text-center">
                     {settings?.firmName || "SPS ȘI ASOCIAȚII"}
                   </span>
-                  <div className="w-12 h-px bg-[var(--gold-600)]/30" />
+                  <div className="w-16 h-px bg-[var(--gold-600)]/40" />
                </motion.div>
                
                <motion.h1 
                   variants={fadeInUp}
-                  className="text-6xl md:text-8xl lg:text-[11rem] font-serif text-white leading-[0.85] tracking-tighter mb-8 uppercase text-center w-full"
+                  className="text-6xl md:text-8xl lg:text-[10rem] xl:text-[12rem] font-serif text-white leading-[0.8] tracking-tighter mb-12 uppercase text-center w-full max-w-6xl"
                >
                   {settings?.homeH1?.split(' ').map((word, i) => (
                     <span key={i} className={i % 2 !== 0 ? "italic text-[var(--gold-400)] block lg:inline" : "block lg:inline"}>
@@ -98,19 +98,19 @@ export default function HomeClient({ settings, services, locations, latestPosts,
 
                <motion.p 
                   variants={fadeInUp}
-                  className="text-lg md:text-2xl text-stone-300 max-w-4xl mx-auto font-serif italic leading-relaxed mb-16 text-center"
+                  className="text-xl md:text-3xl text-stone-300 max-w-4xl mx-auto font-serif italic leading-relaxed mb-20 text-center"
                >
                   {settings?.homeSubtitle || settings?.firmDescription || "Apărăm drepturile și interesele clienților noștri cu o rigoare academică și o strategie juridică de neegalat în județul Brașov."}
                </motion.p>
 
                <motion.div 
                    variants={fadeInUp}
-                   className="flex flex-col md:flex-row items-center justify-center gap-12 w-full pt-8"
+                   className="flex flex-col sm:flex-row items-center justify-center gap-8 w-full pt-10"
                 >
-                   <Link href="/contact" className="px-16 py-8 bg-[var(--gold-500)] text-black text-[12px] font-black uppercase tracking-[0.5em] flex items-center gap-6 hover:bg-white transition-all group shadow-2xl shadow-[var(--gold-500)]/20">
-                      {settings?.ctaPrimary || "Solicită Consultanță"} <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />
+                   <Link href="/contact" className="btn-elite-wide w-full sm:w-auto min-w-[300px] justify-center">
+                      {settings?.ctaPrimary || "Solicită Consultanță"} <ArrowRight className="w-6 h-6 group-hover:translate-x-3 transition-transform duration-500" />
                    </Link>
-                   <Link href="#expertiza" className="px-16 py-8 border-[0.5px] border-white/20 text-stone-400 text-[12px] font-black uppercase tracking-[0.5em] hover:border-white hover:text-white transition-all backdrop-blur-sm">
+                   <Link href="#expertiza" className="btn-elite w-full sm:w-auto min-w-[300px] justify-center">
                       {settings?.ctaSecondary || "Explorați Expertiza"}
                    </Link>
                 </motion.div>
@@ -127,17 +127,17 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       </section>
 
       {/* --- ECHIPA (INTERACTIVE SILHOUETTES) --- */}
-      <section id="echipa" className="py-48 bg-[#030303] border-b border-white/5 relative z-10">
-         <div className="max-w-[1700px] mx-auto px-8 w-full">
-            <div className="text-center space-y-8 mb-32">
-               <span className="text-[11px] font-black uppercase tracking-[0.6em] text-[var(--gold-600)] block">Liderii Apărării</span>
-               <h2 className="text-6xl md:text-9xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto">
+      <section id="echipa" className="py-60 bg-[#030303] border-b border-white/5 relative z-10 w-full overflow-hidden">
+         <div className="max-w-[1800px] mx-auto px-8 w-full flex flex-col items-center justify-center text-center">
+            <div className="text-center space-y-12 mb-40 w-full flex flex-col items-center">
+               <span className="text-[12px] font-black uppercase tracking-[0.8em] text-[var(--gold-600)] block text-center">LIDERII APĂRĂRII</span>
+               <h2 className="text-7xl md:text-[8rem] lg:text-[11rem] font-black tracking-tighter text-white uppercase italic leading-none mx-auto text-center w-full">
                  Avocații <br className="md:hidden"/> <span className="text-[var(--gold-500)]">Tăi.</span>
                </h2>
-               <p className="text-xl text-stone-500 font-serif italic max-w-3xl mx-auto pt-8 leading-relaxed text-center">Echipa administrată direct din portal, definită prin putere strategică, excelență academică și o viziune legală neclintită.</p>
+               <p className="text-2xl text-stone-500 font-serif italic max-w-4xl mx-auto pt-12 leading-relaxed text-center">Echipa administrată direct din portal, definită prin putere strategică, excelență academică și o viziune legală neclintită.</p>
             </div>
 
-            <div className="flex flex-col lg:flex-row min-h-[90vh] gap-6">
+            <div className="flex flex-col lg:flex-row min-h-[100vh] gap-6 w-full items-stretch">
                {displayAttorneys.map((attorney) => (
                   <motion.div 
                      key={attorney.id}
@@ -199,16 +199,16 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       <section id="expertiza" className="py-60 px-8 border-b border-white/5 relative bg-[#050505]">
          <div className="absolute top-0 right-1/2 translate-x-1/2 w-[1200px] h-[1200px] bg-[radial-gradient(circle_at_center,_rgba(197,160,89,0.08)_0%,_transparent_70%)] opacity-20 pointer-events-none" />
          
-         <div className="max-w-7xl mx-auto text-center space-y-24">
+         <div className="max-w-7xl mx-auto flex flex-col items-center justify-center text-center space-y-24 w-full">
             <motion.div 
                initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}
-               className="space-y-10 max-w-5xl mx-auto flex flex-col items-center"
+               className="space-y-12 max-w-5xl mx-auto flex flex-col items-center justify-center text-center w-full"
             >
-               <span className="text-[11px] font-black uppercase tracking-[0.6em] text-[var(--gold-600)] block">PRESTIGIUL REZULTATELOR</span>
-               <h2 className="text-7xl md:text-[10rem] font-black tracking-tighter text-white uppercase italic leading-[0.8] mx-auto">
-                 Expertiză <br/> <span className="text-[var(--gold-400)] italic-gold text-stone-500">De Elită.</span>
+               <span className="text-[12px] font-black uppercase tracking-[0.7em] text-[var(--gold-600)] block text-center">PRESTIGIUL REZULTATELOR</span>
+               <h2 className="text-7xl md:text-[8rem] lg:text-[11rem] font-black tracking-tighter text-white uppercase italic leading-[0.8] mx-auto text-center w-full">
+                 Expertiză <br/> <span className="text-[var(--gold-400)] italic-gold">De Elită.</span>
                </h2>
-               <p className="text-2xl text-stone-400 font-serif leading-relaxed italic max-w-3xl mx-auto pt-10 text-center">
+               <p className="text-2xl md:text-3xl text-stone-400 font-serif leading-relaxed italic max-w-3xl mx-auto pt-10 text-center">
                  Cabinetul nostru nu oferă doar asistență legală; oferim certitudinea unei apărări construite pe fundamente academice solide și o experiență vastă în cele mai complexe jurisdicții.
                </p>
             </motion.div>
@@ -239,12 +239,12 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       </section>
 
       {/* --- SERVICII (EDITORIAL GRID) --- */}
-      <section id="servicii" className="py-60 px-8 bg-[#080808]">
-         <div className="max-w-7xl mx-auto text-center space-y-8 mb-40 flex flex-col items-center">
-            <span className="text-[11px] font-black uppercase tracking-[0.6em] text-stone-600 block">ARIA DE EXPERTIZĂ</span>
-            <h3 className="text-7xl md:text-9xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto text-center">Piloni <br/><span className="text-[var(--gold-500)]">Juridici.</span></h3>
-            <div className="pt-12">
-               <button className="px-16 py-8 border-[0.5px] border-white/10 text-stone-400 text-[11px] font-black uppercase tracking-[0.5em] hover:border-white hover:text-white transition-all mx-auto backdrop-blur-sm shadow-xl">
+      <section id="servicii" className="py-60 px-8 bg-[#080808] border-b border-white/5">
+         <div className="max-w-7xl mx-auto text-center space-y-12 mb-40 flex flex-col items-center justify-center w-full">
+            <span className="text-[12px] font-black uppercase tracking-[0.7em] text-stone-600 block text-center">ARIA DE EXPERTIZĂ</span>
+            <h3 className="text-7xl md:text-9xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto text-center w-full">Piloni <br/><span className="text-[var(--gold-500)]">Juridici.</span></h3>
+            <div className="pt-16 flex justify-center w-full">
+               <button className="btn-elite-wide min-w-[350px] justify-center mx-auto">
                   Descarcă Broșura Digitală
                </button>
             </div>
@@ -272,13 +272,13 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       </section>
 
       {/* --- LATEST ARTICLES (CENTERED SEO POWERHOUSE) --- */}
-      <section id="articole" className="py-40 px-8 bg-[#030303] border-t border-white/5">
-         <div className="max-w-7xl mx-auto space-y-24 flex flex-col items-center">
-            <div className="text-center space-y-6 flex flex-col items-center">
-               <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-600)] block">PERSPECTIVE ȘI ANALIZE</span>
-               <h3 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto mb-10 text-center">Journal <br/> <span className="text-[var(--gold-500)]">Legislativ.</span></h3>
-               <Link href="/blog" className="inline-flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 hover:text-white transition-colors border-b border-stone-800 pb-2 hover:border-white">
-                  Vezi Toate Articolele <BookOpen className="w-4 h-4" />
+      <section id="articole" className="py-60 px-8 bg-[#030303] border-t border-white/5">
+         <div className="max-w-7xl mx-auto space-y-32 flex flex-col items-center justify-center w-full text-center">
+            <div className="text-center space-y-12 flex flex-col items-center justify-center w-full">
+               <span className="text-[12px] font-black uppercase tracking-[0.7em] text-[var(--gold-600)] block text-center">PERSPECTIVE ȘI ANALIZE</span>
+               <h3 className="text-6xl md:text-9xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto mb-12 text-center w-full">Journal <br/> <span className="text-[var(--gold-500)]">Legislativ.</span></h3>
+               <Link href="/blog" className="inline-flex items-center justify-center gap-6 text-[12px] font-black uppercase tracking-[0.5em] text-stone-400 hover:text-white transition-all border-b border-stone-800 pb-4 hover:border-[var(--gold-500)] mx-auto">
+                  Vezi Toate Articolele <BookOpen className="w-6 h-6" />
                </Link>
             </div>
 
