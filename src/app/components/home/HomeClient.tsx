@@ -56,45 +56,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
   return (
     <div className="min-h-screen bg-[#050505] text-stone-200 selection:bg-[var(--gold-500)] selection:text-stone-950 font-sans">
       
-      {/* --- ELITE NAVIGATION --- */}
-      <motion.nav 
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1, ease: "circOut" }}
-        className="fixed top-0 inset-x-0 z-50 h-24 flex items-center justify-between px-8 md:px-16 lg:px-24 bg-gradient-to-b from-black/80 via-black/40 to-transparent backdrop-blur-[2px]"
-      >
-        <Link href="/" className="flex items-center gap-3 group">
-          {settings?.logoUrl ? (
-            <img src={settings.logoUrl} alt={settings.firmName} className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
-          ) : (
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-sm bg-stone-900 border border-white/10 flex items-center justify-center group-hover:border-[var(--gold-500)] transition-colors">
-                <Scale className="w-6 h-6 text-[var(--gold-500)]" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-black tracking-tighter uppercase leading-none text-white italic">SPS</span>
-                <span className="text-[10px] font-black tracking-[0.4em] uppercase text-[var(--gold-500)]">ȘI ASOCIAȚII</span>
-              </div>
-            </div>
-          )}
-        </Link>
-        
-        <div className="hidden lg:flex items-center gap-12">
-           {['Echipa', 'Expertiză', 'Servicii', 'Blog', 'Locații'].map((item) => (
-             <Link 
-               key={item} 
-               href={item === "Blog" ? "/blog" : `/#${item.toLowerCase()}`} 
-               className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 hover:text-white transition-all relative group"
-             >
-               {item}
-               <span className="absolute -bottom-1 left-0 w-0 h-px bg-[var(--gold-500)] group-hover:w-full transition-all duration-300" />
-             </Link>
-           ))}
-           <Link href="/contact" className="btn-elite px-8 py-3.5 text-[10px] bg-white text-black font-black uppercase tracking-widest hover:bg-[var(--gold-500)] hover:text-white transition-all">
-             Contact Rapid
-           </Link>
-        </div>
-      </motion.nav>
+      {/* Navigation and Footer are now Global in layout.tsx */}
 
       {/* --- CINEMATIC HERO (CENTERED & DRAMATIC) --- */}
       <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
@@ -142,16 +104,16 @@ export default function HomeClient({ settings, services, locations, latestPosts,
                </motion.p>
 
                <motion.div 
-                  variants={fadeInUp}
-                  className="flex flex-col md:flex-row items-center justify-center gap-8 w-full"
-               >
-                  <Link href="/contact" className="btn-elite-wide px-16 py-6 border-[0.5px] border-[var(--gold-500)] bg-[var(--gold-500)]/10 text-[var(--gold-400)] text-[11px] font-black uppercase tracking-[0.4em] flex items-center gap-4 hover:bg-[var(--gold-500)] hover:text-black transition-all group backdrop-blur-sm">
-                    {settings?.ctaPrimary || "Programează Consultanță"} <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                  </Link>
-                  <button className="px-16 py-6 border-[0.5px] border-stone-800 text-stone-400 text-[11px] font-black uppercase tracking-[0.4em] hover:text-white hover:border-white transition-all backdrop-blur-md">
-                    {settings?.ctaSecondary || "Vezi Expertiza"}
-                  </button>
-               </motion.div>
+                   variants={fadeInUp}
+                   className="flex flex-col md:flex-row items-center justify-center gap-12 w-full pt-8"
+                >
+                   <Link href="/contact" className="px-16 py-8 bg-[var(--gold-500)] text-black text-[12px] font-black uppercase tracking-[0.5em] flex items-center gap-6 hover:bg-white transition-all group shadow-2xl shadow-[var(--gold-500)]/20">
+                      {settings?.ctaPrimary || "Solicită Consultanță"} <ArrowRight className="w-5 h-5 group-hover:translate-x-3 transition-transform duration-500" />
+                   </Link>
+                   <Link href="#expertiza" className="px-16 py-8 border-[0.5px] border-white/20 text-stone-400 text-[12px] font-black uppercase tracking-[0.5em] hover:border-white hover:text-white transition-all backdrop-blur-sm">
+                      {settings?.ctaSecondary || "Explorați Expertiza"}
+                   </Link>
+                </motion.div>
             </motion.div>
          </div>
 
@@ -165,17 +127,17 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       </section>
 
       {/* --- ECHIPA (INTERACTIVE SILHOUETTES) --- */}
-      <section id="echipa" className="py-40 bg-[#030303] border-b border-white/5 relative">
-         <div className="max-w-[1400px] mx-auto px-8 w-full">
-            <div className="text-center space-y-6 mb-24">
-               <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-600)] block">Liderii Apărării</span>
-               <h2 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto">
+      <section id="echipa" className="py-48 bg-[#030303] border-b border-white/5 relative z-10">
+         <div className="max-w-[1700px] mx-auto px-8 w-full">
+            <div className="text-center space-y-8 mb-32">
+               <span className="text-[11px] font-black uppercase tracking-[0.6em] text-[var(--gold-600)] block">Liderii Apărării</span>
+               <h2 className="text-6xl md:text-9xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto">
                  Avocații <br className="md:hidden"/> <span className="text-[var(--gold-500)]">Tăi.</span>
                </h2>
-               <p className="text-lg text-stone-400 font-serif italic max-w-2xl mx-auto pt-6">Echipa administrată direct din portal, definită de putere, excelență și viziune legală.</p>
+               <p className="text-xl text-stone-500 font-serif italic max-w-3xl mx-auto pt-8 leading-relaxed text-center">Echipa administrată direct din portal, definită prin putere strategică, excelență academică și o viziune legală neclintită.</p>
             </div>
 
-            <div className="flex flex-col lg:flex-row h-[800px] gap-4">
+            <div className="flex flex-col lg:flex-row min-h-[90vh] gap-6">
                {displayAttorneys.map((attorney) => (
                   <motion.div 
                      key={attorney.id}
@@ -183,7 +145,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
                      onMouseEnter={() => setActiveLawyer(attorney.id)}
                      onMouseLeave={() => setActiveLawyer(null)}
                      onClick={() => setActiveLawyer(attorney.id)}
-                     className={`relative overflow-hidden cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex-1`}
+                     className={`relative overflow-hidden cursor-pointer transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex-1 h-[700px] lg:h-auto`}
                      style={{
                         flexGrow: activeLawyer === attorney.id ? 3 : 1,
                         filter: activeLawyer === attorney.id ? 'grayscale(0%) contrast(100%)' : 'grayscale(100%) contrast(120%) brightness(0.6)',
@@ -209,7 +171,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
                                     exit={{ opacity: 0, height: 0 }}
                                     className="overflow-hidden"
                                  >
-                                    <p className="text-sm font-serif italic text-stone-300 leading-relaxed mb-8 max-w-sm">
+                                    <p className="text-sm font-serif italic text-stone-300 leading-relaxed mb-8 max-w-md">
                                        {attorney.bio}
                                     </p>
                                     
@@ -233,41 +195,42 @@ export default function HomeClient({ settings, services, locations, latestPosts,
          </div>
       </section>
 
-      {/* --- STRATEGIC ADVANTAGE (CENTERED REDESIGN) --- */}
-      <section id="expertiză" className="py-40 px-8 border-b border-white/5 relative bg-[#050505]">
-         <div className="absolute top-0 right-1/2 translate-x-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle_at_center,_var(--gold-900)_0%,_transparent_70%)] opacity-5 pointer-events-none" />
+      {/* --- STRATEGIC ADVANTAGE (EXPERTIZĂ) --- */}
+      <section id="expertiza" className="py-60 px-8 border-b border-white/5 relative bg-[#050505]">
+         <div className="absolute top-0 right-1/2 translate-x-1/2 w-[1200px] h-[1200px] bg-[radial-gradient(circle_at_center,_rgba(197,160,89,0.08)_0%,_transparent_70%)] opacity-20 pointer-events-none" />
          
-         <div className="max-w-7xl mx-auto text-center space-y-12">
+         <div className="max-w-7xl mx-auto text-center space-y-24">
             <motion.div 
                initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}
-               className="space-y-6 max-w-4xl mx-auto"
+               className="space-y-10 max-w-5xl mx-auto flex flex-col items-center"
             >
-               <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-600)] block">PRESTIGIUL REZULTATELOR</span>
-               <h2 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto">
-                 Excelență <br/> <span className="text-[var(--gold-500)]">Incontestabilă.</span>
+               <span className="text-[11px] font-black uppercase tracking-[0.6em] text-[var(--gold-600)] block">PRESTIGIUL REZULTATELOR</span>
+               <h2 className="text-7xl md:text-[10rem] font-black tracking-tighter text-white uppercase italic leading-[0.8] mx-auto">
+                 Expertiză <br/> <span className="text-[var(--gold-400)] italic-gold text-stone-500">De Elită.</span>
                </h2>
-               <p className="text-xl text-stone-400 font-serif leading-loose italic max-w-2xl mx-auto pt-6">
-                 Cabinetul nostru nu oferă doar asistență legală; oferim certitudinea unei apărări construite pe fundamente academice solide și o experiență vastă.
+               <p className="text-2xl text-stone-400 font-serif leading-relaxed italic max-w-3xl mx-auto pt-10 text-center">
+                 Cabinetul nostru nu oferă doar asistență legală; oferim certitudinea unei apărări construite pe fundamente academice solide și o experiență vastă în cele mai complexe jurisdicții.
                </p>
             </motion.div>
 
             <motion.div 
                initial="hidden" whileInView="visible" viewport={{ once: true }} variants={staggerContainer}
-               className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12 pt-16 border-t border-white/5"
+               className="grid sm:grid-cols-2 lg:grid-cols-4 gap-20 pt-24 border-t border-white/5"
             >
                {[
-                 { icon: Zap, title: "Strategie Agresivă", desc: "Anticipăm și neutralizăm riscurile." },
-                 { icon: Award, title: "Rigoare Academică", desc: "Analiză bazată pe doctrine de vârf." },
-                 { icon: Users, title: "Abordare Elitară", desc: "Discreție și eficiență maximă." },
-                 { icon: Globe, title: "Viziune Globală", desc: "Sincronizare cu dreptul european." }
+                 { icon: Zap, title: "Strategie Agresivă", desc: "Anticipăm mișcările adversarului și neutralizăm riscurile înainte ca ele să devină obstacole." },
+                 { icon: Award, title: "Rigoare Academică", desc: "Fiecare speță este analizată prin prisma doctrinei de vârf și a jurisprudenței actualizate." },
+                 { icon: Users, title: "Abordare Elitară", desc: "Garantăm discreție absolută și o comunicare privilegiată, adaptată nevoilor clienților premium." },
+                 { icon: Globe, title: "Viziune Globală", desc: "Expertiza noastră depășește granițele locale, integrând standarde de drept european și internațional." }
                ].map((feat, i) => (
-                 <motion.div variants={fadeInUp} key={i} className="group flex flex-col items-center text-center space-y-6">
-                    <div className="w-20 h-20 rounded-full border-[0.5px] border-stone-800 flex items-center justify-center group-hover:border-[var(--gold-500)] group-hover:bg-[var(--gold-500)]/5 transition-all duration-500">
-                       <feat.icon className="w-8 h-8 text-[var(--gold-600)]" />
+                 <motion.div variants={fadeInUp} key={i} className="group flex flex-col items-center text-center space-y-10">
+                    <div className="w-32 h-32 rounded-full border-[0.5px] border-stone-800 flex items-center justify-center group-hover:border-[var(--gold-500)] group-hover:bg-[var(--gold-500)]/10 transition-all duration-700 relative">
+                       <feat.icon className="w-14 h-14 text-[var(--gold-600)] group-hover:scale-110 transition-transform duration-500" />
+                       <div className="absolute inset-0 rounded-full bg-[var(--gold-500)]/0 group-hover:bg-[var(--gold-500)]/5 blur-3xl transition-all duration-700" />
                     </div>
-                    <div>
-                       <h4 className="text-sm font-black uppercase tracking-widest text-white mb-3">{feat.title}</h4>
-                       <p className="text-[11px] text-stone-500 leading-relaxed uppercase font-bold tracking-tighter">{feat.desc}</p>
+                    <div className="space-y-6">
+                       <h4 className="text-sm font-black uppercase tracking-[0.4em] text-white group-hover:text-[var(--gold-400)] transition-colors">{feat.title}</h4>
+                       <p className="text-[12px] text-stone-500 leading-relaxed uppercase font-bold tracking-tight px-4 opacity-70 group-hover:opacity-100 transition-opacity">{feat.desc}</p>
                     </div>
                  </motion.div>
                ))}
@@ -275,30 +238,33 @@ export default function HomeClient({ settings, services, locations, latestPosts,
          </div>
       </section>
 
-      {/* --- SERVICII (CENTERED EDITORIAL) --- */}
-      <section id="servicii" className="py-40 px-8 bg-[#080808]">
-         <div className="max-w-7xl mx-auto text-center space-y-6 mb-24">
-            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-stone-600 block">ARIA DE EXPERTIZĂ</span>
-            <h3 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto">Piloni <br/><span className="text-[var(--gold-500)]">Juridici.</span></h3>
-            <div className="pt-8">
-               <button className="btn-elite px-12 py-5 border-[0.5px] border-stone-800 text-stone-400 text-[10px] font-black uppercase tracking-[0.4em] hover:border-[var(--gold-500)] hover:text-white transition-all mx-auto">
+      {/* --- SERVICII (EDITORIAL GRID) --- */}
+      <section id="servicii" className="py-60 px-8 bg-[#080808]">
+         <div className="max-w-7xl mx-auto text-center space-y-8 mb-40 flex flex-col items-center">
+            <span className="text-[11px] font-black uppercase tracking-[0.6em] text-stone-600 block">ARIA DE EXPERTIZĂ</span>
+            <h3 className="text-7xl md:text-9xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto text-center">Piloni <br/><span className="text-[var(--gold-500)]">Juridici.</span></h3>
+            <div className="pt-12">
+               <button className="px-16 py-8 border-[0.5px] border-white/10 text-stone-400 text-[11px] font-black uppercase tracking-[0.5em] hover:border-white hover:text-white transition-all mx-auto backdrop-blur-sm shadow-xl">
                   Descarcă Broșura Digitală
                </button>
             </div>
          </div>
 
-         <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-0.5 bg-white/5 border border-white/5 p-[0.5px]">
+         <div className="max-w-[1700px] mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-1 bg-white/5 border border-white/5 p-1 shadow-2xl">
             {services.map((service) => (
-              <div key={service.id} className="group relative p-16 bg-[#080808] hover:bg-[#030303] transition-all duration-700 text-center flex flex-col items-center">
-                 <div className="w-16 h-16 rounded-full border-[0.5px] border-stone-800 flex items-center justify-center text-[var(--gold-500)] mb-10 group-hover:scale-110 group-hover:border-[var(--gold-500)] transition-all duration-500">
-                   <Gavel className="w-6 h-6" />
+              <div key={service.id} className="group relative p-32 bg-[#080808] hover:bg-[#030303] transition-all duration-1000 text-center flex flex-col items-center overflow-hidden border border-transparent hover:border-white/5">
+                 <div className="absolute -right-20 -top-20 w-80 h-80 bg-[var(--gold-500)]/5 blur-[120px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                 
+                 <div className="w-24 h-24 rounded-full border-[0.5px] border-stone-800 flex items-center justify-center text-[var(--gold-500)] mb-16 group-hover:scale-110 group-hover:border-[var(--gold-500)] group-hover:bg-[var(--gold-500)]/5 transition-all duration-700">
+                    <Scale className="w-10 h-10" />
                  </div>
-                 <h4 className="text-3xl font-serif text-white mb-6 group-hover:text-[var(--gold-400)] transition-colors italic uppercase tracking-tight">{service.name}</h4>
-                 <p className="text-sm text-stone-500 font-serif leading-relaxed mb-10 italic">
-                   {service.description || "Asistență de cel mai înalt nivel, calibrată pentru succes excepțional."}
+                 
+                 <h4 className="text-4xl font-serif text-white mb-10 group-hover:text-[var(--gold-400)] transition-colors italic uppercase tracking-tight duration-700 leading-none">{service.name}</h4>
+                 <p className="text-lg text-stone-500 font-serif leading-loose mb-20 italic px-8">
+                   {service.description || "Asistență de cel mai înalt nivel, calibrată pentru succes excepțional în situații juridice critice."}
                  </p>
-                 <Link href={`/servicii/${service.slug}`} className="inline-flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-[var(--gold-600)] group-hover:text-white transition-all mt-auto">
-                   Explorează Cazistica <ArrowRight className="w-4 h-4 translate-x-0 group-hover:translate-x-2 transition-transform" />
+                 <Link href={`/servicii/${service.slug}`} className="inline-flex items-center justify-center gap-6 text-[11px] font-black uppercase tracking-[0.4em] text-[var(--gold-600)] group-hover:text-white transition-all mt-auto py-8 border-t border-white/5 w-full">
+                   Explorați Cazul <ArrowRight className="w-5 h-5 translate-x-0 group-hover:translate-x-3 transition-transform duration-500" />
                  </Link>
               </div>
             ))}
@@ -307,19 +273,19 @@ export default function HomeClient({ settings, services, locations, latestPosts,
 
       {/* --- LATEST ARTICLES (CENTERED SEO POWERHOUSE) --- */}
       <section id="articole" className="py-40 px-8 bg-[#030303] border-t border-white/5">
-         <div className="max-w-7xl mx-auto space-y-24">
-            <div className="text-center space-y-6">
+         <div className="max-w-7xl mx-auto space-y-24 flex flex-col items-center">
+            <div className="text-center space-y-6 flex flex-col items-center">
                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-600)] block">PERSPECTIVE ȘI ANALIZE</span>
-               <h3 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto mb-10">Journal <br/> <span className="text-[var(--gold-500)]">Legislativ.</span></h3>
+               <h3 className="text-5xl md:text-8xl font-black tracking-tighter text-white uppercase italic leading-none mx-auto mb-10 text-center">Journal <br/> <span className="text-[var(--gold-500)]">Legislativ.</span></h3>
                <Link href="/blog" className="inline-flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-stone-400 hover:text-white transition-colors border-b border-stone-800 pb-2 hover:border-white">
                   Vezi Toate Articolele <BookOpen className="w-4 h-4" />
                </Link>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-16">
+            <div className="grid lg:grid-cols-3 gap-16 w-full">
                {latestPosts.map((post) => (
-                 <Link key={post.id} href={`/blog/${post.slug}`} className="group space-y-8 block text-center">
-                    <div className="aspect-[4/3] overflow-hidden bg-stone-900 border border-stone-800 relative mb-8">
+                 <Link key={post.id} href={`/blog/${post.slug}`} className="group space-y-8 block text-center flex flex-col items-center">
+                    <div className="aspect-[4/3] w-full overflow-hidden bg-stone-900 border border-stone-800 relative mb-8">
                        {post.featuredImage ? (
                          <img src={post.featuredImage} alt={post.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 opacity-80 group-hover:opacity-100" />
                        ) : (
@@ -332,10 +298,10 @@ export default function HomeClient({ settings, services, locations, latestPosts,
                     <div className="flex items-center justify-center gap-3 text-[9px] font-black uppercase tracking-widest text-[var(--gold-600)] mb-6">
                        <Calendar className="w-3 h-3" /> {new Date(post.createdAt).toLocaleDateString('ro-RO')}
                     </div>
-                    <h4 className="text-3xl font-serif text-white group-hover:text-[var(--gold-400)] transition-colors leading-tight italic px-4">
+                    <h4 className="text-3xl font-serif text-white group-hover:text-[var(--gold-400)] transition-colors leading-tight italic px-4 text-center">
                        {post.title}
                     </h4>
-                    <p className="text-sm text-stone-500 font-serif italic line-clamp-2 leading-relaxed px-6">
+                    <p className="text-sm text-stone-500 font-serif italic line-clamp-2 leading-relaxed px-6 text-center">
                        {post.excerpt}
                     </p>
                  </Link>
@@ -344,37 +310,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
          </div>
       </section>
 
-      {/* --- ELITE FOOTER --- */}
-      <footer className="py-32 px-8 bg-black border-t border-white/5">
-         <div className="max-w-7xl mx-auto flex flex-col items-center text-center space-y-16 mb-24">
-            <div className="space-y-6">
-               <div className="flex flex-col items-center">
-                  <span className="text-5xl md:text-6xl font-black tracking-tighter uppercase leading-none text-white italic">SPS</span>
-                  <span className="text-xs font-black tracking-[0.6em] uppercase text-[var(--gold-500)] mt-2">ȘI ASOCIAȚII</span>
-               </div>
-               <p className="text-stone-500 font-serif italic text-xl leading-relaxed max-w-xl mx-auto">
-                 Definim standardele excelenței juridice prin rigoare, integritate și o viziune strategică de neegalat.
-               </p>
-            </div>
-            
-            <div className="flex flex-wrap items-center justify-center gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-stone-400">
-               <Link href="/" className="hover:text-[var(--gold-500)] transition-colors">Acasă</Link>
-               <Link href="/blog" className="hover:text-[var(--gold-500)] transition-colors">Journal Legislativ</Link>
-               <Link href="/contact" className="hover:text-[var(--gold-500)] transition-colors">Contact Rapid</Link>
-               <Link href="/admin" className="hover:text-white text-stone-600 transition-colors">CMA Portal</Link>
-            </div>
-         </div>
-         
-         <div className="max-w-5xl mx-auto pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
-            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-stone-600">
-               © {new Date().getFullYear()} SPS ȘI ASOCIAȚII. Toate Drepturile Rezervate.
-            </p>
-            <div className="flex gap-10 text-[9px] font-black uppercase tracking-widest text-stone-600">
-               <Link href="/politica-confidentialitate" className="hover:text-white transition-colors">Confidențialitate</Link>
-               <Link href="/termeni-si-conditii" className="hover:text-white transition-colors">Termeni Legali</Link>
-            </div>
-         </div>
-      </footer>
+      {/* Global Footer is now in layout.tsx */}
     </div>
   );
 }

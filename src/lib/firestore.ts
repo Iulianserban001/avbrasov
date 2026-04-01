@@ -63,6 +63,14 @@ export async function getPage(id: string): Promise<Page | null> {
   return { id: snap.id, ...snap.data() } as Page;
 }
 
+export async function getPageBySlug(slug: string): Promise<Page | null> {
+  const q = query(collection(db, PAGES), where("slug", "==", slug), limit(1));
+  const snap = await getDocs(q);
+  if (snap.empty) return null;
+  const d = snap.docs[0];
+  return { id: d.id, ...d.data() } as Page;
+}
+
 export async function createPage(data: Omit<Page, "id" | "createdAt" | "updatedAt">): Promise<string> {
   const docRef = await addDoc(collection(db, PAGES), {
     ...cleanUndefined(data as unknown as Record<string, unknown>),

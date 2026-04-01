@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Header from "@/app/components/layout/Header";
+import Footer from "@/app/components/layout/Footer";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import type { SiteSettings } from "@/types";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
   display: "swap",
 });
+
+async function getSettings(): Promise<SiteSettings | null> {
+  try {
+    const snap = await getDoc(doc(db as any, "settings", "global"));
+    return snap.exists() ? (snap.data() as SiteSettings) : null;
+  } catch (err) {
+    return null;
+  }
+}
 
 export const metadata: Metadata = {
   title: {
@@ -36,14 +50,51 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await getSettings();
+
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "LegalService",
+    "name": settings?.firmName || "SPS și Asociații",
+    "description": settings?.firmDescription || "Cabinet de avocatură de elită în Brașov.",
+    "url": "https://avocat-brasov.ro",
+    "telephone": settings?.firmPhone,
+    "email": settings?.firmEmail,
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": settings?.firmAddress,
+      "addressLocality": settings?.firmCity || "Brașov",
+      "addressRegion": settings?.firmCounty || "Brașov",
+      "postalCode": settings?.firmZipCode,
+      "addressCountry": "RO"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": settings?.firmLatitude || 45.6427,
+      "longitude": settings?.firmLongitude || 25.5887
+    }
+  };
+
   return (
-    <html lang="ro" className={inter.variable}>
-      <body className="antialiased">{children}</body>
+    <html lang="ro">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+        />
+      </head>
+      <body className={`${inter.variable} antialiased bg-black text-stone-200 overflow-x-hidden`}>
+        <Header settings={settings} />
+        <main className="min-h-screen">
+          {children}
+        </main>
+        <Footer settings={settings} />
+      </body>
     </html>
   );
 }

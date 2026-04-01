@@ -6,7 +6,7 @@ import {
   Save, Upload, Image as ImageIcon, Shield, Globe, 
   Mail, Phone, MapPin, Facebook, Linkedin, Instagram,
   CheckCircle2, AlertCircle, Loader2, Trash2, Palette,
-  Type, Share2, Zap, Target
+  Type, Share2, Zap, Target, Layout
 } from "lucide-react";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -15,8 +15,9 @@ import type { SiteSettings } from "@/types";
 
 const TABS = [
   { id: "branding", label: "Branding", icon: Palette },
+  { id: "homepage", label: "Homepage", icon: Layout },
   { id: "contact", label: "Contact", icon: Mail },
-  { id: "social", label: "Social & SEO", icon: Globe },
+  { id: "social", label: "Social", icon: Globe },
 ];
 
 export default function SettingsPage() {
@@ -275,6 +276,82 @@ export default function SettingsPage() {
               </motion.div>
             )}
 
+            {activeTab === "homepage" && (
+              <motion.div
+                key="homepage"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                className="space-y-8"
+              >
+                <div className="premium-card p-8 space-y-6">
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Titlu Hero (H1)</label>
+                      <input 
+                        type="text" 
+                        value={settings?.homeH1} 
+                        onChange={(e) => handleUpdate("homeH1", e.target.value)}
+                        className="input-pro text-xl font-serif italic"
+                        placeholder="Justiție de Elită."
+                      />
+                      <p className="text-[9px] text-[var(--stone-600)] uppercase font-bold tracking-tight">Folosește spații pentru a separa cuvintele. Recomandat: 3-5 cuvinte.</p>
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Subtitlu Hero</label>
+                      <textarea 
+                        rows={3}
+                        value={settings?.homeSubtitle} 
+                        onChange={(e) => handleUpdate("homeSubtitle", e.target.value)}
+                        className="input-pro resize-none font-serif italic"
+                        placeholder="Apărăm drepturile și interesele clienților noștri..."
+                      />
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Meta Description (SEO)</label>
+                      <textarea 
+                        rows={2}
+                        value={settings?.homeMetaDescription} 
+                        onChange={(e) => handleUpdate("homeMetaDescription", e.target.value)}
+                        className="input-pro resize-none"
+                        placeholder="Cabinet de avocatură de elită în Brașov..."
+                      />
+                   </div>
+                   <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Cuvinte Cheie (SEO)</label>
+                      <input 
+                        type="text" 
+                        value={settings?.homeKeywords} 
+                        onChange={(e) => handleUpdate("homeKeywords", e.target.value)}
+                        className="input-pro"
+                        placeholder="avocat brasov, drept civil brasov..."
+                      />
+                   </div>
+                   <div className="grid md:grid-cols-2 gap-6 pt-4 border-t border-white/5">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Buton Principal (CTA)</label>
+                        <input 
+                          type="text" 
+                          value={settings?.ctaPrimary} 
+                          onChange={(e) => handleUpdate("ctaPrimary", e.target.value)}
+                          className="input-pro"
+                          placeholder="Solicită Consultanță"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] px-1">Buton Secundar (CTA)</label>
+                        <input 
+                          type="text" 
+                          value={settings?.ctaSecondary} 
+                          onChange={(e) => handleUpdate("ctaSecondary", e.target.value)}
+                          className="input-pro"
+                          placeholder="Explorați Expertiza"
+                        />
+                      </div>
+                   </div>
+                </div>
+              </motion.div>
+            )}
+            
             {activeTab === "contact" && (
               <motion.div
                 key="contact"
