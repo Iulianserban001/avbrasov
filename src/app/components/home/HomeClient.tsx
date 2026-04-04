@@ -132,18 +132,18 @@ export default function HomeClient({ settings, services, locations, latestPosts,
             {/* CTA Buttons */}
             <motion.div
               variants={fadeInUp as any}
-              className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full pt-6"
+              className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full max-w-2xl mx-auto pt-6"
             >
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-4 px-12 py-6 bg-[var(--gold-500)] text-black text-[11px] font-black uppercase tracking-[0.5em] hover:bg-[var(--gold-400)] transition-all duration-700 group w-full sm:w-auto shadow-2xl shadow-[var(--gold-500)]/10"
+                className="inline-flex items-center justify-center gap-4 px-10 py-5 bg-[var(--gold-500)] text-black text-sm font-black uppercase tracking-widest hover:bg-[var(--gold-400)] transition-all duration-500 rounded-sm w-full sm:w-auto shadow-[0_0_40px_rgba(197,160,89,0.15)] group"
               >
                 {settings?.ctaPrimary || "Solicită Consultanță"}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-700" />
               </Link>
               <Link
                 href="#expertiza"
-                className="inline-flex items-center justify-center gap-4 px-12 py-6 border border-white/10 text-stone-300 text-[11px] font-black uppercase tracking-[0.5em] hover:border-white/40 hover:text-white transition-all duration-700 w-full sm:w-auto backdrop-blur-sm"
+                className="inline-flex items-center justify-center gap-4 px-10 py-5 border border-white/20 text-white text-sm font-black uppercase tracking-widest hover:bg-white/10 transition-all duration-500 rounded-sm w-full sm:w-auto backdrop-blur-md"
               >
                 {settings?.ctaSecondary || "Explorați Expertiza"}
               </Link>
@@ -160,7 +160,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
 
       {/* ===== ECHIPA SECTION ===== */}
       <section id="echipa" className="w-full bg-[#030303] border-y border-white/5 py-24 overflow-hidden flex flex-col items-center justify-center">
-        <div className="w-full max-w-[1400px] px-6 flex flex-col items-center">
+        <div className="w-full max-w-[1400px] mx-auto px-6 flex flex-col items-center">
           
           {/* Section Header */}
           <div className="mb-24 flex flex-col items-center gap-8 text-center">

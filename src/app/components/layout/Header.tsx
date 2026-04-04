@@ -29,18 +29,18 @@ export default function Header({ settings }: HeaderProps) {
   ];
 
   return (
-    <header className="fixed top-0 inset-x-0 z-[60] w-full">
+    <header className="fixed top-0 inset-x-0 z-[60] w-full flex justify-center bg-transparent">
       <nav
-        className={`w-full transition-all duration-700 ${
+        className={`w-full flex justify-center transition-all duration-700 ${
           isScrolled
-            ? "bg-black/95 backdrop-blur-2xl border-b border-white/5 py-3 shadow-2xl shadow-black/50"
+            ? "bg-black/95 backdrop-blur-2xl border-b border-white/5 py-4 shadow-2xl shadow-black/50"
             : "bg-transparent py-10"
         }`}
       >
-        <div className="max-w-[1600px] mx-auto px-10 flex flex-col items-center justify-center gap-8 relative">
+        <div className="w-full max-w-[1400px] mx-auto px-6 flex flex-col items-center justify-center gap-6 relative">
 
           {/* === LOGO (Perfectly Centered) === */}
-          <Link href="/" className="flex flex-col items-center justify-center group">
+          <Link href="/" className="flex flex-col items-center justify-center group z-20">
             <div className="flex flex-col items-center text-center">
               <span
                 className={`font-black tracking-tighter uppercase text-white italic leading-[0.7] transition-all duration-700 group-hover:text-[var(--gold-400)] ${
@@ -60,7 +60,7 @@ export default function Header({ settings }: HeaderProps) {
           </Link>
 
           {/* === DESKTOP NAV (Centered below logo) === */}
-          <div className={`hidden lg:flex items-center justify-center gap-16 transition-all duration-700 ${isScrolled ? "mt-0" : "mt-4"}`}>
+          <div className="hidden lg:flex items-center justify-center gap-16 transition-all duration-700">
             {menuItems.map((item) => (
               <Link
                 key={item.name}
