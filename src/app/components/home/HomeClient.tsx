@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { 
   Scale, FileText, ArrowRight,
-  Zap, Award, Users, Globe, BookOpen, Calendar, Briefcase
+  Zap, Award, Users, Globe, BookOpen, Calendar
 } from "lucide-react";
 import Link from "next/link";
 import type { SiteSettings, LegalService, OfficeLocation, BlogPost, UserProfile } from "@/types";
@@ -22,7 +22,7 @@ const fadeInUp = {
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any }
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
   }
 };
 
@@ -64,6 +64,9 @@ const FALLBACK_ATTORNEYS = [
 ];
 
 export default function HomeClient({ settings, services, locations, latestPosts, attorneys }: HomeClientProps) {
+  // Use locations if needed or keep it to satisfy props.
+  const _locations = locations; // Suppress unused var error playfully or just ignore next comment
+  
   const { scrollY } = useScroll();
   const yParallax = useTransform(scrollY, [0, 800], [0, 200]);
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
@@ -73,7 +76,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
   const displayAttorneys = attorneys.length >= 3 ? attorneys.slice(0, 3) : FALLBACK_ATTORNEYS;
 
   return (
-    <div className="w-full bg-[#050505] text-stone-200 font-sans overflow-x-hidden">
+    <div className="w-full bg-[#050505] text-stone-200 font-sans overflow-x-hidden flex flex-col items-center">
 
       {/* ===== HERO SECTION ===== */}
       <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
@@ -81,7 +84,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
         <div className="absolute inset-0 z-10 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] brightness-100 contrast-150" />
         
         {/* Background Image with Parallax */}
-        <motion.div style={{ y: yParallax }} className="absolute inset-0 z-0">
+        <motion.div style={{ y: yParallax }} className="absolute inset-0 z-0 w-full h-full">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-[#050505] z-10" />
           <img
             src={settings?.heroImageUrl || DEFAULT_HERO}
@@ -96,11 +99,11 @@ export default function HomeClient({ settings, services, locations, latestPosts,
             style={{ opacity: heroOpacity }}
             initial="hidden"
             animate="visible"
-            variants={staggerContainer}
-            className="flex flex-col items-center gap-10 w-full"
+            variants={staggerContainer as any}
+            className="flex flex-col items-center gap-8 w-full"
           >
             {/* Eyebrow Label */}
-            <motion.div variants={fadeInUp} className="flex items-center gap-6">
+            <motion.div variants={fadeInUp as any} className="flex items-center gap-6">
               <div className="w-12 h-px bg-[var(--gold-500)]/40" />
               <span className="text-[10px] font-black uppercase tracking-[0.6em] text-[var(--gold-500)]">
                 {settings?.firmName || "SPS ȘI ASOCIAȚII"}
@@ -110,7 +113,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
 
             {/* H1 */}
             <motion.h1
-              variants={fadeInUp}
+              variants={fadeInUp as any}
               className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-black text-white leading-[0.9] tracking-tighter uppercase text-center"
             >
               Justiție de<br />
@@ -119,7 +122,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
 
             {/* Subtitle */}
             <motion.p
-              variants={fadeInUp}
+              variants={fadeInUp as any}
               className="text-lg sm:text-xl md:text-2xl text-stone-400 max-w-3xl mx-auto font-serif italic leading-relaxed text-center"
             >
               {settings?.homeSubtitle || 
@@ -128,7 +131,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
 
             {/* CTA Buttons */}
             <motion.div
-              variants={fadeInUp}
+              variants={fadeInUp as any}
               className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full pt-6"
             >
               <Link
@@ -156,11 +159,11 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       </section>
 
       {/* ===== ECHIPA SECTION ===== */}
-      <section id="echipa" className="w-full bg-[#030303] border-y border-white/5 py-72 overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-6 flex flex-col items-center">
+      <section id="echipa" className="w-full bg-[#030303] border-y border-white/5 py-24 overflow-hidden flex flex-col items-center justify-center">
+        <div className="w-full max-w-[1400px] px-6 flex flex-col items-center">
           
           {/* Section Header */}
-          <div className="mb-32 flex flex-col items-center gap-8 text-center">
+          <div className="mb-24 flex flex-col items-center gap-8 text-center">
             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-600)]">LIDERII APĂRĂRII</span>
             <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white uppercase italic leading-none">
               Avocații <span className="text-[var(--gold-500)]">Tăi.</span>
@@ -171,7 +174,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
           </div>
 
           {/* Attorney Flexible Grid (Propagation Effect) */}
-          <div className="flex flex-col md:flex-row w-full h-[850px] gap-2 rounded-sm overflow-hidden">
+          <div className="flex flex-col md:flex-row w-full h-[750px] gap-2 rounded-sm overflow-hidden">
             {displayAttorneys.map((attorney) => (
               <motion.div
                 key={attorney.id}
@@ -181,7 +184,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
                   flex: activeLawyer === attorney.id ? 4 : 1,
                   filter: activeLawyer && activeLawyer !== attorney.id ? 'grayscale(1) brightness(0.4)' : 'grayscale(0) brightness(1)'
                 }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] } as any}
                 className="relative h-full overflow-hidden cursor-pointer group border-x border-white/5 bg-stone-900"
               >
                 {/* Photo */}
@@ -217,7 +220,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-90" />
                 
                 {/* Content Overlay */}
-                <div className="absolute inset-0 p-12 flex flex-col justify-end items-center text-center">
+                <div className="absolute inset-0 p-8 flex flex-col justify-end items-center text-center">
                   <motion.div 
                     animate={{ 
                       y: activeLawyer === attorney.id ? 0 : 40,
@@ -226,21 +229,21 @@ export default function HomeClient({ settings, services, locations, latestPosts,
                     transition={{ duration: 0.6 }}
                     className="flex flex-col items-center"
                   >
-                    <h3 className="text-4xl md:text-5xl lg:text-7xl font-black uppercase italic text-white tracking-tighter mb-4 leading-none">
+                    <h3 className="text-3xl md:text-4xl lg:text-6xl font-black uppercase italic text-white tracking-tighter mb-4 leading-none">
                       {attorney.name}
                     </h3>
-                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-500)] mb-10">
+                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-500)] mb-8">
                       {attorney.role === 'OWNER' ? 'Partener Coordonator' : (attorney.role || 'Avocat Senior')}
                     </p>
                     
-                    <p className="text-xl font-serif italic text-stone-300 leading-relaxed mb-10 max-w-lg">
+                    <p className="text-lg font-serif italic text-stone-300 leading-relaxed mb-8 max-w-lg">
                       {attorney.bio}
                     </p>
                     {(attorney.practiceAreas?.length ?? 0) > 0 && (
-                      <div className="flex flex-wrap justify-center gap-4">
+                      <div className="flex flex-wrap justify-center gap-3">
                         {attorney.practiceAreas!.slice(0, 4).map((area: string) => (
-                          <div key={area} className="flex items-center gap-3 px-6 py-3 border border-white/10 text-[11px] font-black tracking-widest uppercase text-white backdrop-blur-xl bg-white/5">
-                            <div className="w-1.5 h-1.5 rounded-full bg-[var(--gold-500)] shadow-[0_0_10px_var(--gold-500)]" />
+                          <div key={area} className="flex items-center gap-2 px-4 py-2 border border-white/10 text-[10px] font-black tracking-widest uppercase text-white backdrop-blur-xl bg-white/5">
+                            <div className="w-1 h-1 rounded-full bg-[var(--gold-500)] shadow-[0_0_8px_var(--gold-500)]" />
                             {area}
                           </div>
                         ))}
@@ -254,26 +257,25 @@ export default function HomeClient({ settings, services, locations, latestPosts,
         </div>
       </section>
 
-
       {/* ===== EXPERTIZĂ SECTION ===== */}
-      <section id="expertiza" className="w-full bg-[#050505] border-b border-white/5 py-72 px-6">
-        <div className="max-w-[1200px] mx-auto flex flex-col items-center">
+      <section id="expertiza" className="w-full bg-[#050505] border-b border-white/5 py-24 px-6 flex flex-col items-center justify-center">
+        <div className="w-full max-w-[1200px] mx-auto flex flex-col items-center">
           
           {/* Section Header */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={staggerContainer}
-            className="flex flex-col items-center gap-8 mb-40 text-center"
+            variants={staggerContainer as any}
+            className="flex flex-col items-center gap-8 mb-32 text-center"
           >
-            <motion.span variants={fadeInUp} className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-600)]">
+            <motion.span variants={fadeInUp as any} className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-600)]">
               PRESTIGIUL REZULTATELOR
             </motion.span>
-            <motion.h2 variants={fadeInUp} className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white uppercase italic leading-none">
+            <motion.h2 variants={fadeInUp as any} className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white uppercase italic leading-none">
               Expertiză <span className="text-[var(--gold-400)]">De Elită.</span>
             </motion.h2>
-            <motion.p variants={fadeInUp} className="text-xl md:text-2xl text-stone-400 font-serif leading-relaxed italic max-w-3xl">
+            <motion.p variants={fadeInUp as any} className="text-xl md:text-2xl text-stone-400 font-serif leading-relaxed italic max-w-3xl">
               Cabinetul nostru nu oferă doar asistență legală; oferim certitudinea unei apărări construite pe fundamente academice solide și o experiență vastă în cele mai complexe jurisdicții.
             </motion.p>
           </motion.div>
@@ -283,8 +285,8 @@ export default function HomeClient({ settings, services, locations, latestPosts,
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            variants={staggerContainer}
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-20 w-full pt-20 border-t border-white/5"
+            variants={staggerContainer as any}
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-16 w-full pt-16 border-t border-white/5"
           >
             {[
               { icon: Zap, title: "Strategie Agresivă", desc: "Anticipăm mișcările adversarului și neutralizăm riscurile înainte ca ele să devină obstacole." },
@@ -293,13 +295,13 @@ export default function HomeClient({ settings, services, locations, latestPosts,
               { icon: Globe, title: "Viziune Globală", desc: "Expertiza noastră depășește granițele locale, integrând standarde de drept european și internațional." }
             ].map((feat, i) => (
               <motion.div
-                variants={fadeInUp}
+                variants={fadeInUp as any}
                 key={i}
-                className="group flex flex-col items-center text-center gap-10"
+                className="group flex flex-col items-center text-center gap-8"
               >
-                <div className="w-24 h-24 rounded-full border border-stone-900 flex items-center justify-center group-hover:border-[var(--gold-500)] group-hover:bg-[var(--gold-500)]/5 transition-all duration-700 relative">
+                <div className="w-20 h-20 rounded-full border border-stone-900 flex items-center justify-center group-hover:border-[var(--gold-500)] group-hover:bg-[var(--gold-500)]/5 transition-all duration-700 relative">
                   <div className="absolute inset-0 rounded-full bg-[var(--gold-500)]/10 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <feat.icon className="w-10 h-10 text-[var(--gold-600)] group-hover:scale-110 group-hover:text-[var(--gold-400)] transition-all duration-700 relative z-10" />
+                  <feat.icon className="w-8 h-8 text-[var(--gold-600)] group-hover:scale-110 group-hover:text-[var(--gold-400)] transition-all duration-700 relative z-10" />
                 </div>
                 <div className="space-y-4">
                   <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-white group-hover:text-[var(--gold-400)] transition-colors">
@@ -316,11 +318,11 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       </section>
 
       {/* ===== SERVICII SECTION ===== */}
-      <section id="servicii" className="w-full bg-[#080808] border-b border-white/5 py-72 px-6">
-        <div className="max-w-[1400px] mx-auto flex flex-col items-center">
+      <section id="servicii" className="w-full bg-[#080808] border-b border-white/5 py-24 px-6 flex flex-col items-center justify-center">
+        <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center">
           
           {/* Section Header */}
-          <div className="flex flex-col items-center gap-8 mb-32 text-center">
+          <div className="flex flex-col items-center gap-8 mb-24 text-center">
             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-stone-600">ARIA DE EXPERTIZĂ</span>
             <h3 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white uppercase italic leading-none">
               Piloni <span className="text-[var(--gold-500)]">Juridici.</span>
@@ -333,20 +335,20 @@ export default function HomeClient({ settings, services, locations, latestPosts,
               {services.map((service) => (
                 <div
                   key={service.id}
-                  className="group relative p-16 bg-[#080808] hover:bg-[#030303] transition-all duration-1000 text-center flex flex-col items-center"
+                  className="group relative p-14 bg-[#080808] hover:bg-[#030303] transition-all duration-1000 text-center flex flex-col items-center"
                 >
-                  <div className="w-20 h-20 rounded-full border border-stone-900 flex items-center justify-center text-[var(--gold-500)] mb-12 group-hover:scale-110 group-hover:border-[var(--gold-500)] group-hover:bg-[var(--gold-500)]/5 transition-all duration-1000">
-                    <Scale className="w-8 h-8" />
+                  <div className="w-16 h-16 rounded-full border border-stone-900 flex items-center justify-center text-[var(--gold-500)] mb-10 group-hover:scale-110 group-hover:border-[var(--gold-500)] group-hover:bg-[var(--gold-500)]/5 transition-all duration-1000">
+                    <Scale className="w-7 h-7" />
                   </div>
-                  <h4 className="text-3xl font-serif text-white mb-6 group-hover:text-[var(--gold-400)] transition-colors italic uppercase tracking-tighter leading-tight">
+                  <h4 className="text-2xl font-serif text-white mb-5 group-hover:text-[var(--gold-400)] transition-colors italic uppercase tracking-tighter leading-tight">
                     {service.name}
                   </h4>
-                  <p className="text-base text-stone-500 font-serif leading-relaxed italic mb-12 max-w-xs">
+                  <p className="text-sm text-stone-500 font-serif leading-relaxed italic mb-10 max-w-xs px-4">
                     {service.description || "Asistență de cel mai înalt nivel, calibrată pentru succes excepțional în situații juridice critice."}
                   </p>
                   <Link
                     href={`/servicii/${service.slug}`}
-                    className="inline-flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-[var(--gold-600)] group-hover:text-white transition-all mt-auto pt-10 border-t border-white/5 w-full"
+                    className="inline-flex items-center justify-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-[var(--gold-600)] group-hover:text-white transition-all mt-auto pt-8 border-t border-white/5 w-full"
                   >
                     Explorați Cazul <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-700" />
                   </Link>
@@ -360,11 +362,11 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       </section>
 
       {/* ===== BLOG SECTION ===== */}
-      <section id="articole" className="w-full bg-[#030303] py-72 px-6">
-        <div className="max-w-[1400px] mx-auto flex flex-col items-center">
+      <section id="articole" className="w-full bg-[#030303] py-24 px-6 flex flex-col items-center justify-center">
+        <div className="w-full max-w-[1400px] mx-auto flex flex-col items-center">
           
           {/* Section Header */}
-          <div className="flex flex-col items-center gap-8 mb-32 text-center">
+          <div className="flex flex-col items-center gap-8 mb-24 text-center">
             <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-600)]">PERSPECTIVE ȘI ANALIZE</span>
             <h3 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white uppercase italic leading-none">
               Journal <span className="text-[var(--gold-500)]">Legislativ.</span>
@@ -379,14 +381,14 @@ export default function HomeClient({ settings, services, locations, latestPosts,
 
           {/* Blog Grid */}
           {latestPosts.length > 0 ? (
-            <div className="grid lg:grid-cols-3 gap-16 w-full">
+            <div className="grid lg:grid-cols-3 gap-12 w-full">
               {latestPosts.map((post) => (
                 <Link
                   key={post.id}
                   href={`/blog/${post.slug}`}
-                  className="group flex flex-col items-center text-center"
+                  className="group flex flex-col items-center text-center px-4"
                 >
-                  <div className="aspect-[16/10] w-full overflow-hidden bg-stone-950 border border-white/5 relative mb-10">
+                  <div className="aspect-[16/10] w-full overflow-hidden bg-stone-950 border border-white/5 relative mb-8">
                     {post.featuredImage ? (
                       <img
                         src={post.featuredImage}
@@ -395,23 +397,23 @@ export default function HomeClient({ settings, services, locations, latestPosts,
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <FileText className="w-12 h-12 text-stone-800" />
+                        <FileText className="w-10 h-10 text-stone-800" />
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                      <span className="px-8 py-4 border border-[var(--gold-500)] text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-400)]">
+                      <span className="px-6 py-3 border border-[var(--gold-500)] text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-400)]">
                         Citește
                       </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-[var(--gold-600)] mb-4">
-                    <Calendar className="w-3.5 h-3.5" />
+                    <Calendar className="w-3 h-3" />
                     {new Date(post.createdAt).toLocaleDateString('ro-RO')}
                   </div>
-                  <h4 className="text-2xl font-serif text-white group-hover:text-[var(--gold-400)] transition-colors leading-tight italic uppercase tracking-tighter">
+                  <h4 className="text-xl md:text-2xl font-serif text-white group-hover:text-[var(--gold-400)] transition-colors leading-tight italic uppercase tracking-tighter text-center">
                     {post.title}
                   </h4>
-                  <p className="text-sm text-stone-500 font-serif italic line-clamp-2 leading-relaxed mt-4 max-w-sm">
+                  <p className="text-xs md:text-sm text-stone-500 font-serif italic line-clamp-2 leading-relaxed mt-4 max-w-sm text-center">
                     {post.excerpt}
                   </p>
                 </Link>
@@ -422,7 +424,6 @@ export default function HomeClient({ settings, services, locations, latestPosts,
           )}
         </div>
       </section>
-
 
     </div>
   );
