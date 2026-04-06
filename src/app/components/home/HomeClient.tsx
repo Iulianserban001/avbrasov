@@ -94,7 +94,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
         </motion.div>
 
         {/* Hero Content - Perfectly Centered */}
-        <div className="relative z-20 w-full max-w-6xl mx-auto px-6 text-center flex flex-col items-center justify-center">
+        <div className="relative z-20 w-full max-w-6xl mx-auto px-6 text-center flex flex-col items-center justify-center select-none">
           <motion.div
             style={{ opacity: heroOpacity }}
             initial="hidden"
@@ -106,7 +106,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
             <motion.div variants={fadeInUp as any} className="flex items-center gap-6">
               <div className="w-12 h-px bg-[var(--gold-500)]/40" />
               <span className="text-[10px] font-black uppercase tracking-[0.6em] text-[var(--gold-500)]">
-                {settings?.firmName || "SPS ȘI ASOCIAȚII"}
+                {settings?.firmName || "BAROUL BRAȘOV • SPS ȘI ASOCIAȚII"}
               </span>
               <div className="w-12 h-px bg-[var(--gold-500)]/40" />
             </motion.div>
@@ -126,24 +126,30 @@ export default function HomeClient({ settings, services, locations, latestPosts,
               className="text-lg sm:text-xl md:text-2xl text-stone-400 max-w-3xl mx-auto font-serif italic leading-relaxed text-center"
             >
               {settings?.homeSubtitle || 
-               "Apărăm drepturile și interesele clienților noștri cu o rigoare academică și o strategie juridică de neegalat în Brașov."}
+               "Apărăm drepturile și interesele clienților noștri cu o rigoare academică și o strategie juridică de neegalat în România."}
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Premium Romanian Law Design */}
             <motion.div
               variants={fadeInUp as any}
               className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full max-w-2xl mx-auto pt-6"
             >
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-4 px-10 py-5 bg-[var(--gold-500)] text-black text-sm font-black uppercase tracking-widest hover:bg-[var(--gold-400)] transition-all duration-500 rounded-sm w-full sm:w-auto shadow-[0_0_40px_rgba(197,160,89,0.15)] group"
+                className="relative inline-flex items-center justify-center gap-4 px-10 py-5 bg-[#0a0a0a] text-[var(--gold-500)] text-xs font-black uppercase tracking-[0.3em] overflow-hidden group border border-white/10 shadow-xl"
               >
-                {settings?.ctaPrimary || "Solicită Consultanță"}
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-3 transition-transform duration-700" />
+                {/* Romanian Flag subtle accent line on top */}
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-[#002B7F] via-[#FCE300] to-[#CE1126] opacity-70 group-hover:opacity-100 transition-opacity" />
+                <span className="relative z-10 flex items-center gap-4">
+                  {settings?.ctaPrimary || "Solicită Consultanță"}
+                  <Scale className="w-4 h-4 group-hover:rotate-12 transition-transform duration-500" />
+                </span>
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-[var(--gold-500)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </Link>
               <Link
                 href="#expertiza"
-                className="inline-flex items-center justify-center gap-4 px-10 py-5 border border-white/20 text-white text-sm font-black uppercase tracking-widest hover:bg-white/10 transition-all duration-500 rounded-sm w-full sm:w-auto backdrop-blur-md"
+                className="inline-flex items-center justify-center gap-4 px-10 py-5 border border-stone-800 text-stone-300 text-xs font-black uppercase tracking-[0.3em] hover:bg-white/5 hover:border-stone-600 transition-all duration-500 backdrop-blur-md"
               >
                 {settings?.ctaSecondary || "Explorați Expertiza"}
               </Link>
@@ -159,7 +165,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       </section>
 
       {/* ===== ECHIPA SECTION ===== */}
-      <section id="echipa" className="w-full bg-[#030303] border-y border-white/5 py-24 overflow-hidden flex flex-col items-center justify-center">
+      <section id="echipa" className="w-full bg-[#030303] border-y border-white/5 py-32 overflow-hidden flex flex-col items-center justify-center select-none">
         <div className="w-full max-w-[1400px] mx-auto px-6 flex flex-col items-center">
           
           {/* Section Header */}
@@ -229,26 +235,27 @@ export default function HomeClient({ settings, services, locations, latestPosts,
                     transition={{ duration: 0.6 }}
                     className="flex flex-col items-center"
                   >
-                    <h3 className="text-3xl md:text-4xl lg:text-6xl font-black uppercase italic text-white tracking-tighter mb-4 leading-none">
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black uppercase italic text-white tracking-tighter mb-4 leading-none select-none">
                       {attorney.name}
                     </h3>
-                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-500)] mb-8">
+                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[var(--gold-500)] mb-8 select-none">
                       {attorney.role === 'OWNER' ? 'Partener Coordonator' : (attorney.role || 'Avocat Senior')}
                     </p>
                     
-                    <p className="text-lg font-serif italic text-stone-300 leading-relaxed mb-8 max-w-lg">
-                      {attorney.bio}
-                    </p>
+                    {/* Practice Areas Moved UP and ENLARGED */}
                     {(attorney.practiceAreas?.length ?? 0) > 0 && (
-                      <div className="flex flex-wrap justify-center gap-3">
-                        {attorney.practiceAreas!.slice(0, 4).map((area: string) => (
-                          <div key={area} className="flex items-center gap-2 px-4 py-2 border border-white/10 text-[10px] font-black tracking-widest uppercase text-white backdrop-blur-xl bg-white/5">
-                            <div className="w-1 h-1 rounded-full bg-[var(--gold-500)] shadow-[0_0_8px_var(--gold-500)]" />
-                            {area}
-                          </div>
+                      <div className="flex flex-wrap justify-center gap-4 mb-8">
+                        {attorney.practiceAreas!.slice(0, 3).map((area: string) => (
+                           <span key={area} className="text-xl md:text-2xl font-black uppercase tracking-[0.2em] text-stone-200 border-b-2 border-[var(--gold-500)] pb-1 select-none">
+                             {area}
+                           </span>
                         ))}
                       </div>
                     )}
+                    
+                    <p className="text-lg md:text-xl font-serif italic text-stone-400 leading-relaxed max-w-lg select-none">
+                      {attorney.bio}
+                    </p>
                   </motion.div>
                 </div>
               </motion.div>
@@ -258,7 +265,7 @@ export default function HomeClient({ settings, services, locations, latestPosts,
       </section>
 
       {/* ===== EXPERTIZĂ SECTION ===== */}
-      <section id="expertiza" className="w-full bg-[#050505] border-b border-white/5 py-24 px-6 flex flex-col items-center justify-center">
+      <section id="expertiza" className="w-full bg-[#050505] border-b border-white/5 py-32 px-6 flex flex-col items-center justify-center select-none">
         <div className="w-full max-w-[1200px] mx-auto flex flex-col items-center">
           
           {/* Section Header */}

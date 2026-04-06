@@ -3,9 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/app/components/layout/Header";
 import Footer from "@/app/components/layout/Footer";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import type { SiteSettings } from "@/types";
+import type { SiteSettings, OfficeLocation } from "@/types";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
@@ -19,6 +19,16 @@ async function getSettings(): Promise<SiteSettings | null> {
     return snap.exists() ? (snap.data() as SiteSettings) : null;
   } catch (err) {
     return null;
+  }
+}
+
+async function getLocations(): Promise<OfficeLocation[]> {
+  try {
+    const q = query(collection(db as any, "locations"), orderBy("order", "asc"));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as OfficeLocation));
+  } catch (err) {
+    return [];
   }
 }
 
@@ -56,6 +66,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const settings = await getSettings();
+  const locations = await getLocations();
 
   const schemaData = {
     "@context": "https://schema.org",
@@ -88,12 +99,12 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
         />
       </head>
-      <body className={`${inter.variable} antialiased bg-black text-stone-200 overflow-x-hidden`}>
+      <body className={`${inter.variable} antialiased bg-black text-stone-200 overflow-x-hidden w-full flex flex-col items-center`}>
         <Header settings={settings} />
-        <main className="min-h-screen">
+        <main className="w-full flex flex-col items-center min-h-screen">
           {children}
         </main>
-        <Footer settings={settings} />
+        <Footer settings={settings} locations={locations} />
       </body>
     </html>
   );

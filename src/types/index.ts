@@ -310,6 +310,7 @@ export interface SiteSettings {
   homeKeywords?: string;
   ctaPrimary?: string;
   ctaSecondary?: string;
+  supportEmails?: string[];
 
   updatedAt?: string;
 }

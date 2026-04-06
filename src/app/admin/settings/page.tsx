@@ -374,7 +374,7 @@ export default function SettingsPage() {
                    </div>
                    <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2">
-                        <Mail className="w-3 h-3" /> Email Contact
+                        <Mail className="w-3 h-3" /> Email Principal
                       </label>
                       <input 
                         type="email" 
@@ -383,6 +383,19 @@ export default function SettingsPage() {
                         className="input-pro"
                       />
                    </div>
+                </div>
+                <div className="space-y-2">
+                   <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2">
+                     <Mail className="w-3 h-3" /> E-mailuri Suplimentare (unul pe linie)
+                   </label>
+                   <textarea 
+                     rows={3}
+                     value={settings?.supportEmails?.join('\n') || ''} 
+                     onChange={(e) => handleUpdate("supportEmails", e.target.value.split('\n').map(email => email.trim()).filter(Boolean))}
+                     className="input-pro resize-none"
+                     placeholder="asistenta@sps-asociatii.ro&#10;parteneri@sps-asociatii.ro"
+                   />
+                   <p className="text-[9px] text-[var(--stone-600)] uppercase font-bold tracking-tight">Aceste e-mailuri vor apărea automat în subsolul site-ului.</p>
                 </div>
                 <div className="space-y-2">
                    <label className="text-[10px] font-black uppercase tracking-widest text-[var(--stone-500)] flex items-center gap-2">
